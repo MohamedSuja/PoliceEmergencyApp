@@ -1,24 +1,15 @@
-import React, {createContext, useState} from 'react';
-import {View, Text} from 'react-native';
+import {
+  View,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import React from 'react';
+import {Header} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import PostCard from '../../components/PostCard';
 
-export const AuthContext = createContext();
-
-const AuthProvider = ({children}) => {
-  const [user, setUser] = useState();
-
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-        CardData,
-      }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export default AuthProvider;
 const ImageUrls = [
   {
     localUrl:
@@ -51,7 +42,7 @@ const CardData = [
     ImageFiles: ImageUrls,
   },
   {
-    Title: 'fdgfgfdgfdg fdgThis car was excident 🚨',
+    Title: 'This car was excident 🚨',
     Subject:
       'Call your local police department and tell them you need to file a stolen vehicle report. Be prepared to provide these details: Car make and model, license plate number, vehicle identification number (VIN), color, and year. The date and time you last saw the car.',
     Date: '21 Jan 2022',
@@ -59,3 +50,45 @@ const CardData = [
     ImageFiles: ImageUrls,
   },
 ];
+
+const NewsFeed = ({navigation}) => {
+  return (
+    <View style={{flex: 1}}>
+      <StatusBar barStyle="light-content" />
+      <Header
+        leftContainerStyle={{marginLeft: 5}}
+        leftComponent={
+          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+            <Icon name="arrow-back-ios" size={30} color="#fff" />
+          </TouchableOpacity>
+        }
+        centerComponent={
+          <Text
+            style={{
+              fontWeight: 'bold',
+              color: '#fff',
+              fontSize: 20,
+            }}>
+            NewsFeed
+          </Text>
+        }
+      />
+      <ScrollView>
+        {CardData.map((item, index) => (
+          <PostCard
+            key={index}
+            indexData={index}
+            Title={item.Title}
+            Subject={item.Subject}
+            Date={item.Date}
+            ifAdmin={item.ifAdmin}
+            ImageFiles={item.ImageFiles}
+            navigation={navigation}
+          />
+        ))}
+      </ScrollView>
+    </View>
+  );
+};
+
+export default NewsFeed;
