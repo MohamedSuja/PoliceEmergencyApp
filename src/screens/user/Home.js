@@ -19,6 +19,7 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 import MenuButton from '../../components/home/MenuButton';
 import BottomTab from '../../components/home/BottomTab';
+import LinearGradient from 'react-native-linear-gradient';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -29,8 +30,8 @@ const Home = ({navigation}) => {
   }, []);
 
   const headerY = scrollY.interpolate({
-    inputRange: [0, 200],
-    outputRange: [0, 10],
+    inputRange: [0, 300],
+    outputRange: [0, 50],
     extrapolate: 'clamp',
   });
   const BorderRadius = scrollY.interpolate({
@@ -50,11 +51,11 @@ const Home = ({navigation}) => {
   });
   const NotificationBtn = scrollY.interpolate({
     inputRange: [0, 200],
-    outputRange: [0, 200],
+    outputRange: [0, 180],
     extrapolate: 'clamp',
   });
   const HideSubText = scrollY.interpolate({
-    inputRange: [0, 100],
+    inputRange: [0, 70],
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
@@ -206,7 +207,7 @@ const Home = ({navigation}) => {
           icon={require('../../assets/icon/alarm.png')}
         />
       </Animated.ScrollView>
-      <BottomTab />
+      {/*  <BottomTab /> */}
     </Animated.View>
   );
 };

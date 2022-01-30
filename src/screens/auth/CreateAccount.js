@@ -118,7 +118,7 @@ const CreateAccount = ({navigation}) => {
           <MainButton
             text="Sign up"
             disabled={false}
-            onPress={() => setUser(true)}
+            onPress={() => navigation.navigate('VerifyAccount')}
             btnStyle={styles.btnStyle}
           />
         </View>
