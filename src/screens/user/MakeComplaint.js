@@ -148,7 +148,7 @@ const MakeComplaint = ({navigation}) => {
         <Button title="Select Location" onPress={() => cleanTempFiles()} />
         <MainButton
           text="Submit"
-          btnStyle={{margin: 10}}
+          btnStyle={{margin: 10, marginBottom: 100}}
           onPress={() =>
             ImageUrls.push({
               localUrl:

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import MainButton from '../../components/MainButton';
+import {AuthContext} from '../../navigations/AuthProvider';
 
 const LoginAccount = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const {setUser} = useContext(AuthContext);
 
   useEffect(() => {
     SystemNavigationBar.navigationShow();
@@ -64,7 +66,7 @@ const LoginAccount = () => {
           <MainButton
             text="Sign in"
             disabled={false}
-            onPress={() => {}}
+            onPress={() => setUser(true)}
             btnStyle={styles.btnStyle}
           />
         </View>

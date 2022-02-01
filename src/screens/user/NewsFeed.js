@@ -6,9 +6,10 @@ import {
   ScrollView,
 } from 'react-native';
 import React from 'react';
-import {Header} from 'react-native-elements';
+import {Divider, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import PostCard from '../../components/PostCard';
+import AppHeader from '../../components/AppHeader';
 
 const ImageUrls = [
   {
@@ -55,24 +56,12 @@ const NewsFeed = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <StatusBar barStyle="light-content" />
-      <Header
-        leftContainerStyle={{marginLeft: 5}}
-        leftComponent={
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-            <Icon name="arrow-back-ios" size={30} color="#fff" />
-          </TouchableOpacity>
-        }
-        centerComponent={
-          <Text
-            style={{
-              fontWeight: 'bold',
-              color: '#fff',
-              fontSize: 20,
-            }}>
-            NewsFeed
-          </Text>
-        }
+
+      <AppHeader
+        navigation={() => navigation.navigate('Home')}
+        title={'NewsFeed'}
       />
+      <Divider color="#000" />
       <ScrollView>
         {CardData.map((item, index) => (
           <PostCard

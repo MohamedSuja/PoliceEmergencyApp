@@ -60,7 +60,7 @@ const Home = ({navigation}) => {
     extrapolate: 'clamp',
   });
   return (
-    <Animated.View style={{flex: 1}}>
+    <Animated.View style={{flex: 1, marginBottom: 40}}>
       {/*   <Header centerComponent={<Text>Home</Text>} /> */}
       <StatusBar translucent backgroundColor={'transparent'} />
 
@@ -70,6 +70,7 @@ const Home = ({navigation}) => {
 
       <Animated.ScrollView
         scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
         onScroll={Animated.event(
           [
             {
@@ -159,7 +160,7 @@ const Home = ({navigation}) => {
                 marginLeft: 40,
                 alignSelf: 'center',
               }}>
-              Mr Roobt
+              User Name
             </Text>
           </Animated.View>
           <Animated.Text
@@ -188,7 +189,7 @@ const Home = ({navigation}) => {
         <MenuButton
           title="Pay Fine"
           icon={require('../../assets/icon/referee.png')}
-          onPress={() => console.log(headerH, headerY, scrollY)}
+          onPress={() => navigation.navigate('PayFine')}
         />
         <MenuButton
           title="Find A Police Station"
