@@ -204,8 +204,9 @@ const Home = ({navigation}) => {
           icon={require('../../assets/icon/ambulance.png')}
         />
         <MenuButton
-          title="Emergency"
+          title="Get Emergency Cop"
           icon={require('../../assets/icon/alarm.png')}
+          onPress={() => navigation.navigate('Emergency')}
         />
       </Animated.ScrollView>
       {/*  <BottomTab /> */}

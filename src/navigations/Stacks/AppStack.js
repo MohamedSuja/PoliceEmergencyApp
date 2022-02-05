@@ -5,6 +5,7 @@ import NewsFeed from '../../screens/user/NewsFeed';
 import MakeComplaint from '../../screens/user/MakeComplaint';
 import NewsView from '../../screens/user/NewsView';
 import PayFine from '../../screens/user/PayFine';
+import Emergency from '../../screens/user/Emergency';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const AppStack = () => {
       <Stack.Screen name="NewsView" component={NewsView} />
       <Stack.Screen name="MakeComplaint" component={MakeComplaint} />
       <Stack.Screen name="PayFine" component={PayFine} />
+      <Stack.Screen name="Emergency" component={Emergency} />
     </Stack.Navigator>
   );
 };

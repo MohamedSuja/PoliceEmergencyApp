@@ -7,6 +7,7 @@ const AppHeader = ({navigation, ...props}) => {
   return (
     <Header
       leftContainerStyle={{marginLeft: 5}}
+      backgroundColor={props.backgroundColor}
       leftComponent={
         <TouchableOpacity onPress={navigation}>
           <Icon name="arrow-back-ios" size={30} color="#fff" />

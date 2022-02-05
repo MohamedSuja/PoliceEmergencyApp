@@ -16,6 +16,7 @@
     "lottie-react-native": "^5.0.1",
     "react": "17.0.2",
     "react-native": "0.66.4",
+    "react-native-bouncy-checkbox": "^2.1.10",
     "react-native-elements": "^3.4.2",
     "react-native-image-crop-picker": "^0.37.2",
     "react-native-linear-gradient": "^2.5.6",
