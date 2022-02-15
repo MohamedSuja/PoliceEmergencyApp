@@ -26,8 +26,12 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const Home = ({navigation}) => {
   const scrollY = useRef(new Animated.Value(0)).current;
   useEffect(() => {
-    SystemNavigationBar.setNavigationColor('#0a67fc', true);
-  }, []);
+    return navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      SystemNavigationBar.setNavigationColor('#0a67fc', true);
+    });
+  }, [navigation]);
 
   const headerY = scrollY.interpolate({
     inputRange: [0, 300],
@@ -60,9 +64,13 @@ const Home = ({navigation}) => {
     extrapolate: 'clamp',
   });
   return (
-    <Animated.View style={{flex: 1, marginBottom: 40}}>
+    <Animated.View style={{flex: 1, marginBottom: 0}}>
       {/*   <Header centerComponent={<Text>Home</Text>} /> */}
-      <StatusBar translucent backgroundColor={'transparent'} />
+      <StatusBar
+        translucent
+        backgroundColor={'transparent'}
+        barStyle="light-content"
+      />
 
       {/* <View style={{paddingTop: 22, marginBottom: 20}}>
         <ImageSlider />

@@ -32,7 +32,7 @@ const PayFine = ({navigation}) => {
   return (
     <View style={{flex: 1, marginBottom: 40}}>
       <AppHeader
-        navigation={() => navigation.navigate('Home')}
+        navigation={() => navigation.navigate('HomeBottomTab')}
         title={'Your Penalties'}
       />
       <Divider color="#000" />

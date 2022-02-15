@@ -1,14 +1,30 @@
 import React from 'react';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
+import ImageCropPicker from 'react-native-image-crop-picker';
+
+const pickFromCamara = () => {
+  ImageCropPicker.openCamera({
+    width: 300,
+    height: 400,
+    cropping: true,
+    compressImageQuality: 0.5,
+    cropperStatusBarColor: '#0a67fc',
+    cropperActiveWidgetColor: '#0a67fc',
+  })
+    .then(image => {
+      console.log(image);
+    })
+    .catch(error => console.log('fetch error:', error));
+};
 
 const getPermission = () => {
   request(PERMISSIONS.ANDROID.CAMERA)
-    .then(result => console.log(result))
+    .then(() => pickFromCamara())
     .catch(error => console.log(error));
 };
 
-export const checkPermission = fun => {
-  check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION).then(result => {
+export const checkPermission = () => {
+  check(PERMISSIONS.ANDROID.CAMERA).then(result => {
     console.log(result);
 
     switch (result) {
@@ -22,7 +38,7 @@ export const checkPermission = fun => {
 
       case RESULTS.GRANTED:
         console.log('The permission is granted');
-        fun;
+        pickFromCamara();
         break;
 
       case RESULTS.BLOCKED:

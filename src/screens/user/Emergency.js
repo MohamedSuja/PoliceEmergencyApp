@@ -1,17 +1,11 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  Dimensions,
-  Modal,
-} from 'react-native';
+import {View, Text, TouchableOpacity, Dimensions, Modal} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AppHeader from '../../components/AppHeader';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import {Picker} from '@react-native-picker/picker';
 import {Input} from 'react-native-elements';
 import AnimatedLottieView from 'lottie-react-native';
+import {TextInput} from 'react-native-paper';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -26,7 +20,9 @@ const Emergency = ({navigation}) => {
   return (
     <View style={{flex: 1, alignItems: 'center'}}>
       <AppHeader
-        navigation={() => navigation.navigate('Home')}
+        navigation={() => {
+          navigation.navigate('HomeBottomTab');
+        }}
         title={'Emergency'}
         backgroundColor={'#e00074'}
       />
@@ -49,8 +45,12 @@ const Emergency = ({navigation}) => {
         <Picker.Item label="Robbery" value="Robbery" />
         <Picker.Item label="Excident" value="Excident" />
       </Picker>
-      <Input placeholder="Short Discription" />
 
+      <TextInput
+        mode="flat"
+        label="Short Discription"
+        style={{width: SCREEN_WIDTH - 10, backgroundColor: 'transparent'}}
+      />
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
         activeOpacity={0.7}

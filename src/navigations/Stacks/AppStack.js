@@ -6,15 +6,16 @@ import MakeComplaint from '../../screens/user/MakeComplaint';
 import NewsView from '../../screens/user/NewsView';
 import PayFine from '../../screens/user/PayFine';
 import Emergency from '../../screens/user/Emergency';
+import HomeBottomTab from '../HomeBottomTab';
 
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="HomeBottomTab"
       screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="HomeBottomTab" component={HomeBottomTab} />
       <Stack.Screen name="NewsFeed" component={NewsFeed} />
       <Stack.Screen name="NewsView" component={NewsView} />
       <Stack.Screen name="MakeComplaint" component={MakeComplaint} />

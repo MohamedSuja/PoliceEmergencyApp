@@ -58,7 +58,7 @@ const NewsFeed = ({navigation}) => {
       <StatusBar barStyle="light-content" />
 
       <AppHeader
-        navigation={() => navigation.navigate('Home')}
+        navigation={() => navigation.navigate('HomeBottomTab')}
         title={'NewsFeed'}
       />
       <Divider color="#000" />

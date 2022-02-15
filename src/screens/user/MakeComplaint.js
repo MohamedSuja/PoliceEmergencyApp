@@ -14,8 +14,9 @@ import React from 'react';
 import MainButton from '../../components/MainButton';
 import {Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
-import {checkPermission} from '../../Functions/GetPermissio';
 import ImageCropPicker from 'react-native-image-crop-picker';
+import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
+import {checkPermission} from '../../Functions/GetPermissio';
 
 const MakeComplaint = ({navigation}) => {
   const ImageUrls = [
@@ -54,6 +55,37 @@ const MakeComplaint = ({navigation}) => {
       .catch(error => console.log('fetch error:', error));
   };
 
+  const getPermission = () => {
+    request(PERMISSIONS.ANDROID.CAMERA)
+      .then(() => pickFromCamara())
+      .catch(error => console.log(error));
+  };
+
+  const checkPermission = () => {
+    check(PERMISSIONS.ANDROID.CAMERA).then(result => {
+      console.log(result);
+
+      switch (result) {
+        case RESULTS.UNAVAILABLE:
+          alert('This feature is not available on this device');
+          break;
+
+        case RESULTS.DENIED:
+          getPermission();
+          break;
+
+        case RESULTS.GRANTED:
+          console.log('The permission is granted');
+          pickFromCamara();
+          break;
+
+        case RESULTS.BLOCKED:
+          alert('The permission is denied and not requestable anymore');
+          break;
+      }
+    });
+  };
+
   const cleanTempFiles = () => {
     ImageCropPicker.clean()
       .then(() => {
@@ -69,7 +101,8 @@ const MakeComplaint = ({navigation}) => {
       <Header
         leftContainerStyle={{marginLeft: 5}}
         leftComponent={
-          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('HomeBottomTab')}>
             <Icon name="arrow-back-ios" size={30} color="#fff" />
           </TouchableOpacity>
         }
@@ -133,7 +166,7 @@ const MakeComplaint = ({navigation}) => {
               margin: 5,
               alignItems: 'center',
             }}>
-            <TouchableOpacity onPress={() => checkPermission(pickFromCamara())}>
+            <TouchableOpacity onPress={() => checkPermission()}>
               <Image
                 style={{
                   height: '100%',
