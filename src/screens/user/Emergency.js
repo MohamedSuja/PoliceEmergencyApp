@@ -31,6 +31,8 @@ const Emergency = ({navigation}) => {
         style={{
           width: 300,
           height: 40,
+
+          backgroundColor: 'red',
         }}
         selectedValue={emergencyType}
         mode="dialog"

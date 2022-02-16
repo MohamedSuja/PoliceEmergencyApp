@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-  TextInput,
   StyleSheet,
   TouchableWithoutFeedback,
   Dimensions,
@@ -15,6 +14,7 @@ import MainButton from '../../components/MainButton';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {AuthContext} from '../../navigations/AuthProvider';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
+import {TextInput} from 'react-native-paper';
 
 const CreateAccount = ({navigation}) => {
   const {setUser} = useContext(AuthContext);
@@ -37,19 +37,20 @@ const CreateAccount = ({navigation}) => {
               Create Your Traffic Police Emergency Account
             </Text>
             <View style={styles.setMargin}>
-              <Text style={styles.textStyle1}>FirstName</Text>
               <TextInput
+                mode="outlined"
+                label="FirstName"
                 value={firstName}
-                placeholder="Mohamed"
                 numberOfLines={1}
                 style={styles.textInputStyle}
                 onChangeText={val => setFirstName(val)}
               />
             </View>
             <View style={styles.setMargin}>
-              <Text style={styles.textStyle1}>LastName</Text>
               <TextInput
-                placeholder="Suja"
+                mode="outlined"
+                label={'LastName'}
+                // placeholder="Suja"
                 numberOfLines={1}
                 style={styles.textInputStyle}
                 value={lastName}
@@ -57,8 +58,9 @@ const CreateAccount = ({navigation}) => {
               />
             </View>
             <View style={styles.setMargin}>
-              <Text style={styles.textStyle1}>ID No</Text>
               <TextInput
+                mode="outlined"
+                label={'ID No'}
                 placeholder="980048272V"
                 numberOfLines={1}
                 style={styles.textInputStyle}
@@ -67,6 +69,8 @@ const CreateAccount = ({navigation}) => {
             <View style={styles.setMargin}>
               <Text style={styles.textStyle1}>Email</Text>
               <TextInput
+                mode="outlined"
+                label={'Email'}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 numberOfLines={1}
@@ -77,8 +81,9 @@ const CreateAccount = ({navigation}) => {
               />
             </View>
             <View style={styles.setMargin}>
-              <Text style={styles.textStyle1}>Password</Text>
               <TextInput
+                mode="outlined"
+                label={'Password'}
                 autoCapitalize="none"
                 secureTextEntry={true}
                 numberOfLines={1}
@@ -105,8 +110,8 @@ const CreateAccount = ({navigation}) => {
         <View
           style={{
             flexDirection: 'row',
-
             alignSelf: 'center',
+            marginTop: 20,
           }}>
           <Text>If You Have a Account</Text>
           <TouchableOpacity onPress={() => navigation.navigate('LoginAccount')}>
@@ -192,13 +197,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   textInputStyle: {
-    height: RFValue(45),
-    paddingHorizontal: 20,
-    fontSize: RFValue(15),
+    // height: RFValue(45),
+    // fontSize: RFValue(15),
     marginTop: 5,
-    borderWidth: 2,
+    //backgroundColor: 'transparent',
     borderRadius: 5,
-    borderColor: 'grey',
   },
 
   section: {

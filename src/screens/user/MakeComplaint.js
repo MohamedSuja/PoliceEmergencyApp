@@ -10,15 +10,21 @@ import {
   Image,
   Button,
 } from 'react-native';
-import React from 'react';
+import React, {useCallback, useMemo, useRef} from 'react';
 import MainButton from '../../components/MainButton';
 import {Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 import {checkPermission} from '../../Functions/GetPermissio';
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler';
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+  BottomSheetBackdrop,
+} from '@gorhom/bottom-sheet';
 
-const MakeComplaint = ({navigation}) => {
+const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const ImageUrls = [
     {
       localUrl:
@@ -95,103 +101,164 @@ const MakeComplaint = ({navigation}) => {
         alert(e);
       });
   };
+  ///Start Bottom Sheet
+
+  const sheetRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => [210], []);
+
+  // callbacks
+  const handleSheetChange = useCallback(index => {
+    console.log('handleSheetChange', index);
+  });
+  const handleSnapPress = useCallback(index => {
+    sheetRef.current?.snapToIndex(index);
+  });
+  const handleClosePress = useCallback(() => {
+    sheetRef.current?.close();
+  });
+  const handlePresentModalPress = useCallback(() => {
+    sheetRef.current?.present();
+  }, []);
+  const renderBackdrop = useCallback(
+    props => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        pressBehavior={'close'}
+        opacity={0.3}
+      />
+    ),
+    [],
+  );
+
+  const MyBottomSheetModal = ({children}) => {
+    return (
+      <BottomSheetModal
+        // enablePanDownToClose
+        backgroundStyle={{backgroundColor: 'grey'}}
+        ref={sheetRef}
+        index={0}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+
+        // onChange={handleSheetChanges}
+      >
+        {children}
+      </BottomSheetModal>
+    );
+  };
+  ///End Bottom Sheet
 
   return (
-    <View style={{flex: 1}}>
-      <Header
-        leftContainerStyle={{marginLeft: 5}}
-        leftComponent={
-          <TouchableOpacity
-            onPress={() => navigation.navigate('HomeBottomTab')}>
-            <Icon name="arrow-back-ios" size={30} color="#fff" />
-          </TouchableOpacity>
-        }
-        centerComponent={
-          <Text
+    <BottomSheetModalProvider>
+      <View style={{flex: 1}}>
+        <Header
+          leftContainerStyle={{marginLeft: 5}}
+          leftComponent={
+            <TouchableOpacity
+              onPress={() => navigation.navigate('HomeBottomTab')}>
+              <Icon name="arrow-back-ios" size={30} color="#fff" />
+            </TouchableOpacity>
+          }
+          centerComponent={
+            <Text
+              style={{
+                fontWeight: 'bold',
+                color: '#fff',
+                fontSize: 20,
+              }}>
+              Make A Complaint
+            </Text>
+          }
+        />
+        <StatusBar barStyle="light-content" />
+        <ScrollView
+          nestedScrollEnabled
+          style={{padding: 20, marginTop: 30, height: '100%', marginBottom: 0}}>
+          <TextInput
+            placeholder="Complaint Title"
+            style={{borderColor: 'black', borderWidth: 2}}
+          />
+          <TextInput
+            multiline
+            numberOfLines={50}
+            placeholder="Complaint"
             style={{
-              fontWeight: 'bold',
-              color: '#fff',
-              fontSize: 20,
-            }}>
-            Make A Complaint
-          </Text>
-        }
-      />
-      <StatusBar barStyle="light-content" />
-      <ScrollView
-        nestedScrollEnabled
-        style={{padding: 20, marginTop: 30, height: '100%', marginBottom: 0}}>
-        <TextInput
-          placeholder="Complaint Title"
-          style={{borderColor: 'black', borderWidth: 2}}
-        />
-        <TextInput
-          multiline
-          numberOfLines={50}
-          placeholder="Complaint"
-          style={{
-            borderColor: 'black',
-            borderWidth: 2,
-            marginTop: 20,
-            height: 400,
-            textAlignVertical: 'top',
-          }}
-        />
-        <ScrollView horizontal style={{marginTop: 15}}>
-          {ImageUrls.map((item, index) => (
+              borderColor: 'black',
+              borderWidth: 2,
+              marginTop: 20,
+              height: 400,
+              textAlignVertical: 'top',
+            }}
+          />
+          <ScrollView horizontal style={{marginTop: 15}}>
+            {ImageUrls.map((item, index) => (
+              <View
+                key={index}
+                style={{
+                  height: 110,
+                  width: 110,
+                  backgroundColor: 'grey',
+                  margin: 5,
+                }}>
+                <Image
+                  style={{
+                    height: '100%',
+                    width: 110,
+                    resizeMode: 'contain',
+                  }}
+                  source={{uri: item.localUrl}}
+                />
+              </View>
+            ))}
+
             <View
-              key={index}
               style={{
                 height: 110,
                 width: 110,
-                backgroundColor: 'grey',
+
                 margin: 5,
+                alignItems: 'center',
               }}>
-              <Image
-                style={{
-                  height: '100%',
-                  width: 110,
-                  resizeMode: 'contain',
-                }}
-                source={{uri: item.localUrl}}
-              />
+              <TouchableOpacity onPress={() => checkPermission()}>
+                <Image
+                  style={{
+                    height: '100%',
+                    width: 100,
+                    resizeMode: 'contain',
+                  }}
+                  source={require('../../assets/icon/photo.png')}
+                />
+              </TouchableOpacity>
             </View>
-          ))}
-
-          <View
-            style={{
-              height: 110,
-              width: 110,
-
-              margin: 5,
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity onPress={() => checkPermission()}>
-              <Image
-                style={{
-                  height: '100%',
-                  width: 100,
-                  resizeMode: 'contain',
-                }}
-                source={require('../../assets/icon/photo.png')}
-              />
-            </TouchableOpacity>
-          </View>
+          </ScrollView>
+          <Button
+            title="Select Location"
+            onPress={() => handlePresentModalPress()}
+          />
+          <MainButton
+            text="Submit"
+            btnStyle={{margin: 10, marginBottom: 100}}
+            onPress={() =>
+              ImageUrls.push({
+                localUrl:
+                  'file:///storage/emulated/0/Android/data/com.policeapp2/files/Pictures/087282eb-93ea-46aa-ad6a-c34a0bc73f0f.jpg',
+              })
+            }
+          />
         </ScrollView>
-        <Button title="Select Location" onPress={() => cleanTempFiles()} />
-        <MainButton
-          text="Submit"
-          btnStyle={{margin: 10, marginBottom: 100}}
-          onPress={() =>
-            ImageUrls.push({
-              localUrl:
-                'file:///storage/emulated/0/Android/data/com.policeapp2/files/Pictures/087282eb-93ea-46aa-ad6a-c34a0bc73f0f.jpg',
-            })
-          }
-        />
-      </ScrollView>
-    </View>
+
+        <MyBottomSheetModal>
+          <View style={{flex: 1, alignItems: 'center'}}>
+            <Text>Awesome 🎉</Text>
+          </View>
+        </MyBottomSheetModal>
+      </View>
+    </BottomSheetModalProvider>
   );
-};
+});
 
 export default MakeComplaint;
