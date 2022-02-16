@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "785673572150",
+    "project_id": "policeapp-32650",
+    "storage_bucket": "policeapp-32650.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785673572150:android:84cab615c88581cda8ed97",
+        "android_client_info": {
+          "package_name": "com.policeapp2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785673572150-55dfq9snlau92vtvoprmansaqs96v917.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq13P9ddhXShg1OJwuIhAPmZLl2Q1FiWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785673572150-55dfq9snlau92vtvoprmansaqs96v917.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -17,7 +17,7 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 import {TextInput} from 'react-native-paper';
 
 const CreateAccount = ({navigation}) => {
-  const {setUser} = useContext(AuthContext);
+  const {setUser, register} = useContext(AuthContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,7 +30,9 @@ const CreateAccount = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} hidden={false} />
-      <ScrollView contentContainerStyle={styles.mainView}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.mainView}>
         <View>
           <View>
             <Text style={styles.textStyle}>
@@ -67,7 +69,6 @@ const CreateAccount = ({navigation}) => {
               />
             </View>
             <View style={styles.setMargin}>
-              <Text style={styles.textStyle1}>Email</Text>
               <TextInput
                 mode="outlined"
                 label={'Email'}
@@ -123,7 +124,7 @@ const CreateAccount = ({navigation}) => {
           <MainButton
             text="Sign up"
             disabled={false}
-            onPress={() => navigation.navigate('VerifyAccount')}
+            onPress={() => register(email, password)}
             btnStyle={styles.btnStyle}
           />
         </View>

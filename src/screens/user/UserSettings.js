@@ -1,12 +1,60 @@
-import {View, Text, StatusBar} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  StatusBar,
+  StyleSheet,
+  Dimensions,
+  Button,
+} from 'react-native';
+import React, {useContext} from 'react';
+import MainButton from '../../components/MainButton';
+import auth from '@react-native-firebase/auth';
+import {AuthContext} from '../../navigations/AuthProvider';
+import {Header} from 'react-native-elements';
+import {RFValue} from 'react-native-responsive-fontsize';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const UserSettings = () => {
+  const {user, logout} = useContext(AuthContext);
+
   return (
-    <View>
-      <Text></Text>
+    <View style={{flex: 1}}>
+      <View style={styles.setingsHeader}>
+        <Text style={styles.titleTextStyle}>App Setings</Text>
+      </View>
+
+      <Text>{user.uid}</Text>
+      <Button title="test" onPress={() => console.log(user)} />
+      <MainButton
+        text="Sign Out"
+        disabled={false}
+        onPress={() => logout()}
+        btnStyle={styles.btnStyle}
+      />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  btnStyle: {
+    backgroundColor: '#100061',
+    margin: 30,
+    width: SCREEN_WIDTH - 50,
+    position: 'absolute',
+    bottom: 0,
+  },
+  titleTextStyle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  setingsHeader: {
+    backgroundColor: '#100061',
+    alignItems: 'center',
+    height: RFValue(70),
+    paddingTop: RFValue(20),
+  },
+});
 
 export default UserSettings;

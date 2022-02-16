@@ -1,5 +1,6 @@
 import React, {createContext, useState} from 'react';
 import {View, Text} from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 export const AuthContext = createContext();
 
@@ -12,6 +13,30 @@ const AuthProvider = ({children}) => {
         user,
         setUser,
         CardData,
+        register: async (email, password) => {
+          try {
+            await auth().createUserWithEmailAndPassword(email, password);
+          } catch (e) {
+            console.log(e);
+            alert(e);
+          }
+        },
+        login: async (email, password) => {
+          try {
+            await auth().signInWithEmailAndPassword(email, password);
+          } catch (e) {
+            console.log(e);
+            alert(e);
+          }
+        },
+        logout: async () => {
+          try {
+            await auth().signOut();
+          } catch (e) {
+            console.log(e);
+            alert(e);
+          }
+        },
       }}>
       {children}
     </AuthContext.Provider>
@@ -19,6 +44,9 @@ const AuthProvider = ({children}) => {
 };
 
 export default AuthProvider;
+
+// Test Datas
+
 const ImageUrls = [
   {
     localUrl:

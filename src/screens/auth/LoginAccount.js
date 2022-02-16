@@ -6,21 +6,23 @@ import {
   StatusBar,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
 } from 'react-native';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import MainButton from '../../components/MainButton';
 import {AuthContext} from '../../navigations/AuthProvider';
+import {HelperText, TextInput} from 'react-native-paper';
 
 const LoginAccount = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {setUser} = useContext(AuthContext);
+  const {setUser, login} = useContext(AuthContext);
+  const [validateData, setValidateData] = useState({email: false});
 
   useEffect(() => {
     SystemNavigationBar.navigationShow();
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent={false} hidden={false} />
@@ -30,8 +32,10 @@ const LoginAccount = () => {
             Sign in to Traffic Police Emergency App
           </Text>
           <View style={styles.setMargin}>
-            <Text style={styles.textStyle1}>Email</Text>
             <TextInput
+              onBlur={() => {}}
+              mode="outlined"
+              label="Email"
               autoCapitalize="none"
               keyboardType="email-address"
               numberOfLines={1}
@@ -40,10 +44,14 @@ const LoginAccount = () => {
               placeholder="example@email.com"
               onChangeText={val => setEmail(val)}
             />
+            {validateData.email ? (
+              <HelperText type="error">Email address is invalid!</HelperText>
+            ) : null}
           </View>
           <View style={styles.setMargin}>
-            <Text style={styles.textStyle1}>Password</Text>
             <TextInput
+              mode="outlined"
+              label="Password"
               autoCapitalize="none"
               secureTextEntry={true}
               numberOfLines={1}
@@ -66,7 +74,7 @@ const LoginAccount = () => {
           <MainButton
             text="Sign in"
             disabled={false}
-            onPress={() => setUser(true)}
+            onPress={() => login(email, password)}
             btnStyle={styles.btnStyle}
           />
         </View>
@@ -130,13 +138,13 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   textInputStyle: {
-    height: 45,
-    paddingHorizontal: 20,
+    // height: 45,
+    //  paddingHorizontal: 20,
     fontSize: 15,
-    marginTop: 5,
-    borderWidth: 2,
-    borderRadius: 5,
-    borderColor: 'grey',
+    //  marginTop: 5,
+    //  borderWidth: 2,
+    //  borderRadius: 5,
+    //   borderColor: 'grey',
   },
   btnView: {
     marginVertical: 20,
