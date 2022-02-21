@@ -12,11 +12,28 @@ import auth from '@react-native-firebase/auth';
 import {AuthContext} from '../../navigations/AuthProvider';
 import {Header} from 'react-native-elements';
 import {RFValue} from 'react-native-responsive-fontsize';
+import firestore from '@react-native-firebase/firestore';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const UserSettings = () => {
   const {user, logout} = useContext(AuthContext);
+  const addUserData = async () => {
+    firestore()
+      .collection('appUser')
+      .add({
+        userId: 'user.uid',
+        firstName: 'a',
+        lastName: 'b',
+        idNo: 'c',
+      })
+      .then(() => {
+        console.log('Post Added!');
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -25,7 +42,7 @@ const UserSettings = () => {
       </View>
 
       <Text>{user.uid}</Text>
-      <Button title="test" onPress={() => console.log(user)} />
+      <Button title="test" onPress={() => addUserData()} />
       <MainButton
         text="Sign Out"
         disabled={false}
