@@ -7,21 +7,46 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import MainButton from '../../components/MainButton';
 import {AuthContext} from '../../navigations/AuthProvider';
 import {HelperText, TextInput} from 'react-native-paper';
+import validator from 'validator';
 
 const LoginAccount = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {setUser, login} = useContext(AuthContext);
-  const [validateData, setValidateData] = useState({email: false});
+  const [validateEmail, setValidateEmail] = useState(false);
+  const [validatePassword, setValidatePassword] = useState(false);
 
   useEffect(() => {
     SystemNavigationBar.navigationShow();
   }, []);
+  //login(email, password)
+  const checkLogin = (email, password) => {
+    const emailCheck = validator.isEmail(email);
+    const passwordCheck = validator.isStrongPassword(password, {
+      minLength: 6,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    });
+    if (email && password != '') {
+      emailCheck ? setValidateEmail(false) : setValidateEmail(true);
+      passwordCheck ? setValidatePassword(false) : setValidatePassword(true);
+      emailCheck == passwordCheck ? login(email, password) : null;
+    } else {
+      Alert.alert(
+        'Wrong Sublimation!',
+        'Username or password field cannot be empty.',
+        [{text: 'Ok'}],
+      );
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,9 +68,12 @@ const LoginAccount = () => {
               value={email}
               placeholder="example@email.com"
               onChangeText={val => setEmail(val)}
+              outlineColor={validateEmail ? 'red' : 'grey'}
             />
-            {validateData.email ? (
-              <HelperText type="error">Email address is invalid!</HelperText>
+            {validateEmail ? (
+              <HelperText style={{fontSize: 14}} type="error">
+                Email address is invalid!
+              </HelperText>
             ) : null}
           </View>
           <View style={styles.setMargin}>
@@ -59,7 +87,14 @@ const LoginAccount = () => {
               value={password}
               placeholder="**********"
               onChangeText={val => setPassword(val)}
+              outlineColor={validatePassword ? 'red' : 'grey'}
             />
+            {validatePassword ? (
+              <HelperText style={{fontSize: 14}} type="error">
+                Password must be at least 6 characters long contain a number and
+                an uppercase letter
+              </HelperText>
+            ) : null}
           </View>
           <View style={styles.flexRowView}>
             <TouchableOpacity>
@@ -74,7 +109,7 @@ const LoginAccount = () => {
           <MainButton
             text="Sign in"
             disabled={false}
-            onPress={() => login(email, password)}
+            onPress={() => checkLogin(email, password)}
             btnStyle={styles.btnStyle}
           />
         </View>

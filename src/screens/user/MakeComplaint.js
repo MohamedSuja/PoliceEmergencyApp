@@ -2,17 +2,18 @@ import {
   View,
   Text,
   StatusBar,
-  TextInput,
   FlatList,
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
   Image,
   Button,
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
-import React, {useCallback, useMemo, useRef} from 'react';
+import React, {useCallback, useMemo, useRef, useState} from 'react';
 import MainButton from '../../components/MainButton';
-import {Header} from 'react-native-elements';
+import {Card, Divider, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
@@ -23,28 +24,38 @@ import {
   BottomSheetModalProvider,
   BottomSheetBackdrop,
 } from '@gorhom/bottom-sheet';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {TextInput, TouchableRipple} from 'react-native-paper';
+import PickImage from '../../components/MakeComplaint/PickImage';
+import ImageButton from '../../components/MakeComplaint/ImageButton';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
-  const ImageUrls = [
-    {
-      localUrl:
-        'https://eh9ti3qk8yf3m8xqr5gt2fp4-wpengine.netdna-ssl.com/wp-content/uploads/2021/06/25470872_web1_210525-ABB-traffic-collisions-crash_3-768x512.jpg',
-    },
-    {
-      localUrl:
-        'https://www.dailynews.lk/sites/default/files/news/2017/04/12/z_p01-Five-killed.jpg',
-    },
-  ];
+  const ImageUrls = [];
+  // ! test
+  const [selectImage, setSelectImage] = useState(ImageUrls);
+
+  const fetchData = () => {
+    setSelectImage([
+      ...selectImage,
+      'https://www.dailynews.lk/sites/default/files/news/2017/04/12/z_p01-Five-killed.jpg',
+    ]);
+  };
 
   const pickImage = () => {
     ImageCropPicker.openPicker({
-      width: 300,
-      height: 400,
-      multiple: true,
-    }).then(images => {
-      console.log(images);
-      ImageUrls.push({localUrl: images.path});
-    });
+      width: 400,
+      height: 300,
+      // TODO: multiple: true,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setSelectImage([...selectImage, image.path]);
+        handleClosePress();
+      })
+      .catch(error => console.log(error));
   };
   const pickFromCamara = () => {
     ImageCropPicker.openCamera({
@@ -57,6 +68,8 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
     })
       .then(image => {
         console.log(image);
+        setSelectImage([...selectImage, image.path]);
+        handleClosePress();
       })
       .catch(error => console.log('fetch error:', error));
   };
@@ -106,7 +119,7 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const sheetRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => [210], []);
+  const snapPoints = useMemo(() => [250], []);
 
   // callbacks
   const handleSheetChange = useCallback(index => {
@@ -138,7 +151,7 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
     return (
       <BottomSheetModal
         // enablePanDownToClose
-        backgroundStyle={{backgroundColor: 'grey'}}
+        backgroundStyle={{backgroundColor: '#ffffff'}}
         ref={sheetRef}
         index={0}
         snapPoints={snapPoints}
@@ -173,87 +186,107 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
               Make A Complaint
             </Text>
           }
+          backgroundColor="#0a67fc"
         />
         <StatusBar barStyle="light-content" />
         <ScrollView
           nestedScrollEnabled
           style={{padding: 20, marginTop: 30, height: '100%', marginBottom: 0}}>
           <TextInput
-            placeholder="Complaint Title"
-            style={{borderColor: 'black', borderWidth: 2}}
+            mode="outlined"
+            label="Complaint Title"
+            style={{
+              // borderColor: 'black', borderWidth: 2,
+              borderRadius: 5,
+            }}
           />
           <TextInput
+            mode="outlined"
             multiline
             numberOfLines={50}
-            placeholder="Complaint"
+            label="Complaint"
             style={{
-              borderColor: 'black',
-              borderWidth: 2,
+              //borderColor: 'black',
+              //   borderWidth: 2,
               marginTop: 20,
               height: 400,
               textAlignVertical: 'top',
+              borderRadius: 5,
             }}
           />
-          <ScrollView horizontal style={{marginTop: 15}}>
-            {ImageUrls.map((item, index) => (
-              <View
-                key={index}
-                style={{
-                  height: 110,
-                  width: 110,
-                  backgroundColor: 'grey',
-                  margin: 5,
-                }}>
-                <Image
-                  style={{
-                    height: '100%',
-                    width: 110,
-                    resizeMode: 'contain',
-                  }}
-                  source={{uri: item.localUrl}}
-                />
-              </View>
+          <View
+            View
+            style={{marginTop: 15, flexDirection: 'row', alignSelf: 'center'}}>
+            {selectImage.map((item, index) => (
+              <PickImage item={item} key={index} />
             ))}
+          </View>
+          <Card
+            containerStyle={{margin: 0}}
+            wrapperStyle={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              margin: 0,
+            }}>
+            <ImageButton
+              onPress={() => handlePresentModalPress()}
+              source={require('../../assets/icon/photo.png')}
+              title="Pick Images"
+            />
+            <Divider
+              width={2}
+              orientation="vertical"
+              style={{marginLeft: 20, marginRight: 20}}
+            />
+            <ImageButton
+              onPress={() => {}}
+              source={require('../../assets/icon/placeholder.png')}
+              title="Pick Location"
+            />
+          </Card>
 
-            <View
-              style={{
-                height: 110,
-                width: 110,
+          {/* //!test button*/}
 
-                margin: 5,
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity onPress={() => checkPermission()}>
-                <Image
-                  style={{
-                    height: '100%',
-                    width: 100,
-                    resizeMode: 'contain',
-                  }}
-                  source={require('../../assets/icon/photo.png')}
-                />
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-          <Button
-            title="Select Location"
-            onPress={() => handlePresentModalPress()}
-          />
           <MainButton
             text="Submit"
             btnStyle={{margin: 10, marginBottom: 100}}
-            onPress={() =>
-              ImageUrls.push({
-                localUrl:
-                  'file:///storage/emulated/0/Android/data/com.policeapp2/files/Pictures/087282eb-93ea-46aa-ad6a-c34a0bc73f0f.jpg',
-              })
-            }
+            onPress={() => setSelectImage(ImageUrls)}
           />
         </ScrollView>
 
         <MyBottomSheetModal>
           <View style={{flex: 1, alignItems: 'center'}}>
-            <Text>Awesome 🎉</Text>
+            <Text style={styles.BottomSheeTitle}>Add Photo</Text>
+            <TouchableRipple
+              rippleColor="rgba(0, 0, 0, .32)"
+              onPress={() => {
+                checkPermission();
+              }}>
+              <View style={styles.BottomSheetSelectButton}>
+                <Image
+                  style={styles.BottomSheetSelectButtonIcon}
+                  source={require('../../assets/icon/camera.png')}
+                />
+                <Text style={styles.BottomSheetSelectButtonText}>
+                  Take a Photo
+                </Text>
+              </View>
+            </TouchableRipple>
+            <TouchableRipple
+              rippleColor="rgba(0, 0, 0, .32)"
+              onPress={() => {
+                pickImage();
+              }}>
+              <View style={styles.BottomSheetSelectButton}>
+                <Image
+                  style={styles.BottomSheetSelectButtonIcon}
+                  source={require('../../assets/icon/photos.png')}
+                />
+                <Text style={styles.BottomSheetSelectButtonText}>
+                  Upload from Photos
+                </Text>
+              </View>
+            </TouchableRipple>
           </View>
         </MyBottomSheetModal>
       </View>
@@ -261,4 +294,27 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   );
 });
 
+const styles = StyleSheet.create({
+  BottomSheeTitle: {
+    fontSize: 20,
+    fontWeight: '800',
+  },
+  BottomSheetSelectButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 5,
+    width: SCREEN_WIDTH - 20,
+    // height: 100,
+  },
+  BottomSheetSelectButtonIcon: {
+    height: RFValue(40),
+    width: RFValue(40),
+    resizeMode: 'contain',
+  },
+  BottomSheetSelectButtonText: {
+    marginLeft: RFValue(50),
+    fontSize: 16,
+    fontWeight: '700',
+  },
+});
 export default MakeComplaint;

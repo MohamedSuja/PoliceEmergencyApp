@@ -14,7 +14,8 @@ import MainButton from '../../components/MainButton';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {AuthContext} from '../../navigations/AuthProvider';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
-import {TextInput} from 'react-native-paper';
+import {HelperText, TextInput} from 'react-native-paper';
+import validator from 'validator';
 
 const CreateAccount = ({navigation}) => {
   const {setUser, register} = useContext(AuthContext);
@@ -22,10 +23,31 @@ const CreateAccount = ({navigation}) => {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [validateEmail, setValidateEmail] = useState(false);
+  const [validatePassword, setValidatePassword] = useState(false);
 
   useEffect(() => {
     SystemNavigationBar.navigationShow();
   }, []);
+
+  const checkRegister = (email, password) => {
+    const emailCheck = validator.isEmail(email);
+    const passwordCheck = validator.isStrongPassword(password, {
+      minLength: 6,
+      minLowercase: 1,
+      minUppercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+    });
+
+    if (email && password != '') {
+      emailCheck ? setValidateEmail(false) : setValidateEmail(true);
+      passwordCheck ? setValidatePassword(false) : setValidatePassword(true);
+      emailCheck == passwordCheck ? register(email, password) : null;
+    } else {
+      alert('Username or password field cannot be empty');
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +101,13 @@ const CreateAccount = ({navigation}) => {
                 value={email}
                 placeholder="example@email.com"
                 onChangeText={val => setEmail(val)}
+                outlineColor={validateEmail ? 'red' : 'grey'}
               />
+              {validateEmail ? (
+                <HelperText style={{fontSize: 14}} type="error">
+                  Email address is invalid!
+                </HelperText>
+              ) : null}
             </View>
             <View style={styles.setMargin}>
               <TextInput
@@ -92,7 +120,14 @@ const CreateAccount = ({navigation}) => {
                 value={password}
                 placeholder="**********"
                 onChangeText={val => setPassword(val)}
+                outlineColor={validatePassword ? 'red' : 'grey'}
               />
+              {validatePassword ? (
+                <HelperText style={{fontSize: 14}} type="error">
+                  Password must be at least 6 characters long contain a number
+                  and an uppercase letter
+                </HelperText>
+              ) : null}
             </View>
           </View>
           <View style={styles.section}>
@@ -124,7 +159,7 @@ const CreateAccount = ({navigation}) => {
           <MainButton
             text="Sign up"
             disabled={false}
-            onPress={() => register(email, password)}
+            onPress={() => checkRegister(email, password)}
             btnStyle={styles.btnStyle}
           />
         </View>

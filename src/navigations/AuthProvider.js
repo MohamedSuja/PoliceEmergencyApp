@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({children}) => {
   const [user, setUser] = useState();
+  const [userData, setUserData] = useState();
 
   return (
     <AuthContext.Provider
@@ -15,7 +16,11 @@ const AuthProvider = ({children}) => {
         CardData,
         register: async (email, password) => {
           try {
-            await auth().createUserWithEmailAndPassword(email, password);
+            await auth()
+              .createUserWithEmailAndPassword(email, password)
+              .then(() => {
+                console.log('ready to register');
+              });
           } catch (e) {
             console.log(e);
             alert(e);
