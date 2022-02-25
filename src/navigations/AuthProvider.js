@@ -6,14 +6,17 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({children}) => {
   const [user, setUser] = useState();
-  const [userData, setUserData] = useState();
+  const [userIdNo, setUserIdNo] = useState();
+  const [userFirstName, setUserFirstName] = useState('');
+  const [userLastName, setUserLastName] = useState('');
+  const [userData, setUserData] = useState([]);
 
-  const addUserData = () => {
-    firestore().collection('user').add({
-      userId: 'user.uid',
-      firstName: 'a',
-      lastName: 'b',
-      idNo: 'c',
+  const addUserData = data => {
+    firestore().collection('user').doc(data.user.uid).set({
+      userId: data.user.uid,
+      firstName: userFirstName,
+      lastName: userLastName,
+      idNo: userIdNo,
     });
   };
 
@@ -22,13 +25,22 @@ const AuthProvider = ({children}) => {
       value={{
         user,
         setUser,
-        CardData,
+        userIdNo,
+        setUserIdNo,
+        userFirstName,
+        setUserFirstName,
+        userLastName,
+        setUserLastName,
+        //Home Page
+        userData,
+        setUserData,
+
         register: async (email, password) => {
           try {
             await auth()
               .createUserWithEmailAndPassword(email, password)
-              .then(() => {
-                addUserData();
+              .then(data => {
+                addUserData(data);
               });
           } catch (e) {
             console.log(e);

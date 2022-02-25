@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -20,11 +20,17 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 import MenuButton from '../../components/home/MenuButton';
 import BottomTab from '../../components/home/BottomTab';
 import LinearGradient from 'react-native-linear-gradient';
+import firestore from '@react-native-firebase/firestore';
+import {AuthContext} from '../../navigations/AuthProvider';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const usersCollection = firestore().collection('user');
 
 const Home = ({navigation}) => {
   const scrollY = useRef(new Animated.Value(0)).current;
+
+  const {userData, setUserData, user} = useContext(AuthContext);
+
   useEffect(() => {
     return navigation.addListener('focus', () => {
       // The screen is focused
@@ -63,6 +69,29 @@ const Home = ({navigation}) => {
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
+  const test = () => {
+    const userFile = firestore()
+      .collection('user')
+      .doc(user.uid)
+      .get()
+      .then(querySnapshot => {
+        console.log(querySnapshot.data());
+        setUserData(querySnapshot.data());
+      });
+  };
+
+  useEffect(() => {
+    const userFile = firestore()
+      .collection('user')
+      .doc(user.uid)
+      .get()
+      .then(querySnapshot => {
+        console.log(querySnapshot.data());
+        setUserData(querySnapshot.data());
+      });
+    return () => userFile();
+  }, [user.uid]);
+
   return (
     <Animated.View style={{flex: 1, marginBottom: 0}}>
       {/*   <Header centerComponent={<Text>Home</Text>} /> */}
@@ -101,7 +130,8 @@ const Home = ({navigation}) => {
               },
             ],
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('UserNotification')}>
             <Animated.View
               style={{
                 marginTop: 10,
@@ -168,7 +198,7 @@ const Home = ({navigation}) => {
                 marginLeft: 40,
                 alignSelf: 'center',
               }}>
-              User Name
+              {userData.firstName} {userData.lastName}
             </Text>
           </Animated.View>
           <Animated.Text
@@ -179,7 +209,7 @@ const Home = ({navigation}) => {
               alignSelf: 'center',
               opacity: HideSubText,
             }}>
-            ID 980004728 V
+            ID {userData.idNo}
           </Animated.Text>
         </Animated.View>
         <Divider style={{height: 5, width: '100%'}} />
@@ -202,6 +232,7 @@ const Home = ({navigation}) => {
         <MenuButton
           title="Find A Police Station"
           icon={require('../../assets/icon/map.png')}
+          onPress={() => test()}
         />
         <MenuButton
           title="Fire Service"

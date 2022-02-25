@@ -4,8 +4,8 @@ import AppHeader from '../../components/AppHeader';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import {Picker} from '@react-native-picker/picker';
 import {Input} from 'react-native-elements';
-import AnimatedLottieView from 'lottie-react-native';
 import {TextInput} from 'react-native-paper';
+import EmergencyModal from '../../components/EmergencyModal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -27,26 +27,28 @@ const Emergency = ({navigation}) => {
         backgroundColor={'#e00074'}
       />
       <Text>Please Use only Emergency Time</Text>
-      <Picker
+      <View
         style={{
-          width: 300,
-          height: 40,
-
-          backgroundColor: 'red',
-        }}
-        selectedValue={emergencyType}
-        mode="dialog"
-        onValueChange={(itemValue, itemIndex) => setEmergencyType(itemValue)}>
-        <Picker.Item label="Please Select" value="" enabled={false} />
-        <Picker.Item
-          label="Trouble For Other"
-          value="TroubleForOther"
-          style={{backgroundColor: 'red'}}
-        />
-        <Picker.Item label="Fighting" value="Fighting" />
-        <Picker.Item label="Robbery" value="Robbery" />
-        <Picker.Item label="Excident" value="Excident" />
-      </Picker>
+          width: SCREEN_WIDTH - 10,
+          borderRadius: 5,
+          borderColor: 'red',
+          borderWidth: 1,
+        }}>
+        <Picker
+          prompt="Please Select"
+          selectedValue={emergencyType}
+          mode="dialog"
+          onValueChange={(itemValue, itemIndex) => setEmergencyType(itemValue)}>
+          <Picker.Item
+            label="Trouble For Other"
+            value="TroubleForOther"
+            style={{backgroundColor: 'red'}}
+          />
+          <Picker.Item label="Fighting" value="Fighting" />
+          <Picker.Item label="Robbery" value="Robbery" />
+          <Picker.Item label="Excident" value="Excident" />
+        </Picker>
+      </View>
 
       <TextInput
         mode="flat"
@@ -76,45 +78,10 @@ const Emergency = ({navigation}) => {
         </View>
       </TouchableOpacity>
 
-      <Modal
-        statusBarTranslucent
-        animationType="slide"
-        visible={modalVisible}
-        transparent={true}
-        //  onRequestClose={() => setModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            backgroundColor: 'rgba(0, 0, 0,0.4)',
-          }}>
-          <Text
-            style={{
-              fontWeight: '800',
-              fontSize: 20,
-              alignSelf: 'center',
-              color: '#fff',
-            }}>
-            Immediately We Take Action
-          </Text>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onLongPress={() => setModalVisible(false)}>
-            <AnimatedLottieView
-              style={{height: 300, alignSelf: 'center'}}
-              source={require('../../assets/animation/alert-icon-exclamation.json')}
-              autoPlay
-              speed={0.5}
-              loop={true}
-            />
-            <Text
-              style={{fontWeight: '800', fontSize: 20, alignSelf: 'center'}}>
-              Long Press To Close
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+      <EmergencyModal
+        onLongPress={() => setModalVisible(false)}
+        modalVisible={modalVisible}
+      />
     </View>
   );
 };

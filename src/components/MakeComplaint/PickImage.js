@@ -3,10 +3,9 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const PickImage = props => {
-  const {key, item, onPress} = props;
+  const {item, onPress} = props;
   return (
     <View
-      key={key}
       style={{
         height: 110,
         width: 110,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,25 +10,30 @@ import {
 import {Card, Divider} from 'react-native-elements';
 import AppHeader from '../../components/AppHeader';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-
-const fine = [
-  {
-    title: 'High Speed Driving',
-    description: '85 Km/h',
-    price: 'RS 2500',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPCO_k0eu1ThKSHvp2yLRejfNZq_RVK_q7IkkMyV59-dB-GuHLDG9TZJqZvauySnTYXPE&usqp=CAU',
-  },
-  {
-    title: 'Not Waiting Helmet',
-    description: 'Single Person ',
-    price: 'RS 2500',
-    image:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5s7BAtg2l58iBCYnT9ZnVyvTIEpbvLRW8lC7K4kOp1O1_7i0eWM9a7LH5ZQz1SLlhHEQ&usqp=CAU',
-  },
-];
+import firestore from '@react-native-firebase/firestore';
 
 const PayFine = ({navigation}) => {
+  const [myFine, setMyFine] = useState([]);
+
+  const getData = () => {
+    firestore()
+      .collection('fine')
+      .doc('1')
+      .get()
+      .then(querySnapshot => {
+        // console.log(querySnapshot.data());
+        setMyFine(querySnapshot.data().Fine);
+      });
+  };
+
+  const total = myFine
+    .map(item => Number(item.price))
+    .reduce((prev, curr) => prev + curr, 0);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <View style={{flex: 1, marginBottom: 40}}>
       <AppHeader
@@ -37,7 +42,7 @@ const PayFine = ({navigation}) => {
       />
       <Divider color="#000" />
       <ScrollView style={styles.scroll}>
-        {fine.map((data, index) => (
+        {myFine.map((data, index) => (
           <Card
             key={index}
             containerStyle={{
@@ -46,16 +51,6 @@ const PayFine = ({navigation}) => {
               borderRadius: 10,
             }}>
             <View style={styles.menuItemStyle}>
-              <BouncyCheckbox
-                // onPress={checkboxValue => selectItem(food, checkboxValue)}
-                // isChecked={isFoodInCart(food, cartItems)}
-                iconStyle={{
-                  borderColor: 'lightgray',
-                  borderRadius: 0,
-                }}
-                fillColor="green"
-              />
-
               <FineInfo data={data} />
               <FineImage data={data} />
             </View>
@@ -86,7 +81,7 @@ const PayFine = ({navigation}) => {
           <Text style={{color: 'white', fontSize: 20, marginRight: 40}}>
             PayFine
           </Text>
-          <Text style={{color: 'white', fontSize: 20}}>12000</Text>
+          <Text style={{color: 'white', fontSize: 20}}>{total + ' Rs'}</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -132,6 +127,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingLeft: 10,
   },
 
   titleStyle: {

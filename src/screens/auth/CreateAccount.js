@@ -18,9 +18,16 @@ import {HelperText, TextInput} from 'react-native-paper';
 import validator from 'validator';
 
 const CreateAccount = ({navigation}) => {
-  const {setUser, register} = useContext(AuthContext);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const {
+    register,
+    userIdNo,
+    setUserIdNo,
+    userFirstName,
+    setUserFirstName,
+    userLastName,
+    setUserLastName,
+  } = useContext(AuthContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [validateEmail, setValidateEmail] = useState(false);
@@ -64,10 +71,10 @@ const CreateAccount = ({navigation}) => {
               <TextInput
                 mode="outlined"
                 label="FirstName"
-                value={firstName}
+                value={userFirstName}
                 numberOfLines={1}
                 style={styles.textInputStyle}
-                onChangeText={val => setFirstName(val)}
+                onChangeText={val => setUserFirstName(val)}
               />
             </View>
             <View style={styles.setMargin}>
@@ -77,8 +84,8 @@ const CreateAccount = ({navigation}) => {
                 // placeholder="Suja"
                 numberOfLines={1}
                 style={styles.textInputStyle}
-                value={lastName}
-                onChangeText={val => setLastName(val)}
+                value={userLastName}
+                onChangeText={val => setUserLastName(val)}
               />
             </View>
             <View style={styles.setMargin}>
@@ -88,6 +95,8 @@ const CreateAccount = ({navigation}) => {
                 placeholder="980048272V"
                 numberOfLines={1}
                 style={styles.textInputStyle}
+                value={userIdNo}
+                onChangeText={val => setUserIdNo(val)}
               />
             </View>
             <View style={styles.setMargin}>
