@@ -31,6 +31,7 @@ const AuthProvider = ({children}) => {
         setUserFirstName,
         userLastName,
         setUserLastName,
+        CardData,
         //Home Page
         userData,
         setUserData,

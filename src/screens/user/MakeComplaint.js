@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import React, {useCallback, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useContext, useMemo, useRef, useState} from 'react';
 import MainButton from '../../components/MainButton';
 import {Card, Divider, Header} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
@@ -28,13 +28,35 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {TextInput, TouchableRipple} from 'react-native-paper';
 import PickImage from '../../components/MakeComplaint/PickImage';
 import ImageButton from '../../components/MakeComplaint/ImageButton';
+import firestore from '@react-native-firebase/firestore';
+import {AuthContext} from '../../navigations/AuthProvider';
+import PickerSheetModal from '../../components/PickerSheetModal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const ImageUrls = [];
+  const [complaintTitle, setComplaintTitle] = useState(null);
+  const [complaint, setComplaint] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const {user} = useContext(AuthContext);
   // ! test
   const [selectImage, setSelectImage] = useState(ImageUrls);
+
+  const SendData = () => {
+    firestore()
+      .collection('complaint')
+      .doc(user.uid)
+      .set({
+        complaintTitle: complaintTitle,
+        complaint: complaint,
+        location: userLocation,
+        selectImage: selectImage,
+      })
+      .then(() => {
+        alert(' You are recorded!');
+      });
+  };
 
   const fetchData = () => {
     setSelectImage([
@@ -134,35 +156,7 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const handlePresentModalPress = useCallback(() => {
     sheetRef.current?.present();
   }, []);
-  const renderBackdrop = useCallback(
-    props => (
-      <BottomSheetBackdrop
-        {...props}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        pressBehavior={'close'}
-        opacity={0.3}
-      />
-    ),
-    [],
-  );
 
-  const MyBottomSheetModal = ({children}) => {
-    return (
-      <BottomSheetModal
-        // enablePanDownToClose
-        backgroundStyle={{backgroundColor: '#ffffff'}}
-        ref={sheetRef}
-        index={0}
-        snapPoints={snapPoints}
-        backdropComponent={renderBackdrop}
-
-        // onChange={handleSheetChanges}
-      >
-        {children}
-      </BottomSheetModal>
-    );
-  };
   ///End Bottom Sheet
 
   return (
@@ -193,6 +187,8 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
           nestedScrollEnabled
           style={{padding: 20, marginTop: 30, height: '100%', marginBottom: 0}}>
           <TextInput
+            value={complaintTitle}
+            onChangeText={val => setComplaintTitle(val)}
             mode="outlined"
             label="Complaint Title"
             style={{
@@ -201,6 +197,8 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
             }}
           />
           <TextInput
+            value={complaint}
+            onChangeText={val => setComplaint(val)}
             mode="outlined"
             multiline
             numberOfLines={50}
@@ -250,71 +248,18 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
           <MainButton
             text="Submit"
             btnStyle={{margin: 10, marginBottom: 100}}
-            onPress={() => setSelectImage(ImageUrls)}
+            onPress={() => SendData()}
           />
         </ScrollView>
-
-        <MyBottomSheetModal>
-          <View style={{flex: 1, alignItems: 'center'}}>
-            <Text style={styles.BottomSheeTitle}>Add Photo</Text>
-            <TouchableRipple
-              rippleColor="rgba(0, 0, 0, .32)"
-              onPress={() => {
-                checkPermission();
-              }}>
-              <View style={styles.BottomSheetSelectButton}>
-                <Image
-                  style={styles.BottomSheetSelectButtonIcon}
-                  source={require('../../assets/icon/camera.png')}
-                />
-                <Text style={styles.BottomSheetSelectButtonText}>
-                  Take a Photo
-                </Text>
-              </View>
-            </TouchableRipple>
-            <TouchableRipple
-              rippleColor="rgba(0, 0, 0, .32)"
-              onPress={() => {
-                pickImage();
-              }}>
-              <View style={styles.BottomSheetSelectButton}>
-                <Image
-                  style={styles.BottomSheetSelectButtonIcon}
-                  source={require('../../assets/icon/photos.png')}
-                />
-                <Text style={styles.BottomSheetSelectButtonText}>
-                  Upload from Photos
-                </Text>
-              </View>
-            </TouchableRipple>
-          </View>
-        </MyBottomSheetModal>
+        <PickerSheetModal
+          sheetRef={sheetRef}
+          pickImage={pickImage}
+          pickFromCamara={checkPermission}
+        />
       </View>
     </BottomSheetModalProvider>
   );
 });
 
-const styles = StyleSheet.create({
-  BottomSheeTitle: {
-    fontSize: 20,
-    fontWeight: '800',
-  },
-  BottomSheetSelectButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: 5,
-    width: SCREEN_WIDTH - 20,
-    // height: 100,
-  },
-  BottomSheetSelectButtonIcon: {
-    height: RFValue(40),
-    width: RFValue(40),
-    resizeMode: 'contain',
-  },
-  BottomSheetSelectButtonText: {
-    marginLeft: RFValue(50),
-    fontSize: 16,
-    fontWeight: '700',
-  },
-});
+const styles = StyleSheet.create({});
 export default MakeComplaint;

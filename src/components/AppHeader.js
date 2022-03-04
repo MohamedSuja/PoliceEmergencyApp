@@ -23,6 +23,7 @@ const AppHeader = ({navigation, ...props}) => {
           {props.title}
         </Text>
       }
+      rightComponent={props.rightComponent}
     />
   );
 };

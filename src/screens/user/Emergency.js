@@ -1,17 +1,36 @@
 import {View, Text, TouchableOpacity, Dimensions, Modal} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AppHeader from '../../components/AppHeader';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import {Picker} from '@react-native-picker/picker';
 import {Input} from 'react-native-elements';
 import {TextInput} from 'react-native-paper';
 import EmergencyModal from '../../components/EmergencyModal';
+import firestore from '@react-native-firebase/firestore';
+import {AuthContext} from '../../navigations/AuthProvider';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const Emergency = ({navigation}) => {
-  const [emergencyType, setEmergencyType] = useState();
+  const [emergencyType, setEmergencyType] = useState('TroubleForOther');
+  const [emergencyDiscription, setEmergencyDiscription] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const {user} = useContext(AuthContext);
+
+  const SendData = () => {
+    firestore()
+      .collection('emergency')
+      .doc(user.uid)
+      .set({
+        emergencyType: emergencyType,
+        emergencyDiscription: emergencyDiscription,
+        location: userLocation,
+      })
+      .then(() => {
+        alert(' You are recorded!');
+      });
+  };
 
   useEffect(() => {
     SystemNavigationBar.setNavigationColor('#e00074', true);
@@ -54,9 +73,14 @@ const Emergency = ({navigation}) => {
         mode="flat"
         label="Short Discription"
         style={{width: SCREEN_WIDTH - 10, backgroundColor: 'transparent'}}
+        onChangeText={val => setEmergencyDiscription(val)}
+        value={emergencyDiscription}
       />
       <TouchableOpacity
-        onPress={() => setModalVisible(true)}
+        onPress={() => {
+          //  setModalVisible(true);
+          SendData();
+        }}
         activeOpacity={0.7}
         style={{
           flex: 1,

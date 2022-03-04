@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import {Card, Divider} from 'react-native-elements';
 import AppHeader from '../../components/AppHeader';
@@ -14,6 +16,17 @@ import firestore from '@react-native-firebase/firestore';
 
 const PayFine = ({navigation}) => {
   const [myFine, setMyFine] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const onRefresh = () => {
+    setIsFetching(true);
+    getData();
+  };
+
+  const r = () => <ActivityIndicator size={'large'} style={{marginTop: 200}} />;
+
+  const total = myFine
+    .map(item => Number(item.price))
+    .reduce((prev, curr) => prev + curr, 0);
 
   const getData = () => {
     firestore()
@@ -23,15 +36,27 @@ const PayFine = ({navigation}) => {
       .then(querySnapshot => {
         // console.log(querySnapshot.data());
         setMyFine(querySnapshot.data().Fine);
+        setTimeout(() => {
+          setIsFetching(false);
+        }, 500);
       });
   };
 
-  const total = myFine
-    .map(item => Number(item.price))
-    .reduce((prev, curr) => prev + curr, 0);
-
   useEffect(() => {
-    getData();
+    let unmounted = false;
+    console.log('Running effect to fetch data');
+
+    setTimeout(() => {
+      console.log('Data loaded for page');
+
+      if (!unmounted) {
+        getData();
+      }
+    }, 500);
+
+    return () => {
+      unmounted = true;
+    };
   }, []);
 
   return (
@@ -39,9 +64,14 @@ const PayFine = ({navigation}) => {
       <AppHeader
         navigation={() => navigation.navigate('HomeBottomTab')}
         title={'Your Penalties'}
+        backgroundColor={'#0052fe'}
       />
       <Divider color="#000" />
-      <ScrollView style={styles.scroll}>
+      <ScrollView
+        style={styles.scroll}
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={onRefresh} />
+        }>
         {myFine.map((data, index) => (
           <Card
             key={index}

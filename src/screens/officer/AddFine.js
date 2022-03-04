@@ -94,7 +94,7 @@ const AddFine = ({navigation}) => {
         }}
         listData={addFine}
       />
-      <View style={{margin: 10, marginBottom: 10}}>
+      <View style={{margin: 10, marginBottom: 50}}>
         <MainButton
           text={'Sent Penalty ' + total + ' Rs'}
           onPress={() => (idNo ? SendData() : alert('Please enter a valid ID'))}
