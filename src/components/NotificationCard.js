@@ -7,9 +7,9 @@ import Icon from 'react-native-vector-icons/dist/Entypo';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const NotificationCard = props => {
-  const {NotificationAvatar, mainText, postTime, visible} = props;
+  const {NotificationAvatar, mainText, postTime, visible, onPress} = props;
   return (
-    <TouchableOpacity activeOpacity={0.5}>
+    <TouchableOpacity activeOpacity={0.5} onPress={onPress}>
       <View
         style={{
           flexDirection: 'row',

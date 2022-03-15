@@ -7,7 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 import AppHeader from '../../components/AppHeader';
 import ImageCropPicker from 'react-native-image-crop-picker';
 import PickerSheetModal from '../../components/PickerSheetModal';
@@ -18,6 +18,8 @@ import {TextInput, TouchableRipple} from 'react-native-paper';
 import {RFValue} from 'react-native-responsive-fontsize';
 import MainButton from '../../components/MainButton';
 import {Picker} from '@react-native-picker/picker';
+import firestore from '@react-native-firebase/firestore';
+import {AuthContext} from '../../navigations/AuthProvider';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -26,6 +28,7 @@ const AddPost = gestureHandlerRootHOC(({navigation}) => {
   const [selectImage, setSelectImage] = useState(ImageUrls);
   const [postPrivacy, setPostPrivacy] = useState('Public');
   const [post, setPost] = useState();
+  const {user} = useContext(AuthContext);
 
   const sheetRef = useRef(null);
 
@@ -66,6 +69,22 @@ const AddPost = gestureHandlerRootHOC(({navigation}) => {
       })
       .catch(error => console.log('fetch error:', error));
   };
+
+  //!firebase
+  const submitPost = () => {
+    firestore()
+      .collection('post')
+      .add({
+        post: post,
+        postPrivacy: postPrivacy,
+        selectImage: selectImage,
+      })
+      .then(() => {
+        alert(' You are recorded!');
+      });
+  };
+
+  const uploadImage = () => {};
 
   return (
     <View style={{flex: 1}}>
@@ -132,8 +151,8 @@ const AddPost = gestureHandlerRootHOC(({navigation}) => {
         renderItem={({item, index}) => <PickImage item={item} key={index} />}
       />
 
-      <View style={{width: SCREEN_WIDTH - 20, margin: 30, alignSelf: 'center'}}>
-        <MainButton text={'Submit Post'} onPress={() => {}} />
+      <View style={{width: SCREEN_WIDTH - 20, margin: 70, alignSelf: 'center'}}>
+        <MainButton text={'Submit Post'} onPress={() => submitPost()} />
       </View>
 
       <BottomSheetModalProvider>

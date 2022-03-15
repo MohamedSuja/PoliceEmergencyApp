@@ -31,8 +31,14 @@ import ImageButton from '../../components/MakeComplaint/ImageButton';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../navigations/AuthProvider';
 import PickerSheetModal from '../../components/PickerSheetModal';
+import storage from '@react-native-firebase/storage';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+
+const uploadUrl = [
+  'file:///storage/emulated/0/Android/data/com.policeapp2/files/Pictures/016af012-4cb5-4f1b-8633-0cdacc3c0414.jpg',
+  'file:///storage/emulated/0/Android/data/com.policeapp2/files/Pictures/37e5a260-5d7d-4f3c-8089-e9e35883f90a.jpg',
+];
 
 const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const ImageUrls = [];
@@ -42,6 +48,7 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const {user} = useContext(AuthContext);
   // ! test
   const [selectImage, setSelectImage] = useState(ImageUrls);
+  const [uploadUri, setUploadUri] = useState([]);
 
   const SendData = () => {
     firestore()
@@ -57,12 +64,64 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
         alert(' You are recorded!');
       });
   };
+  //start
 
-  const fetchData = () => {
-    setSelectImage([
-      ...selectImage,
-      'https://www.dailynews.lk/sites/default/files/news/2017/04/12/z_p01-Five-killed.jpg',
-    ]);
+  /*   const uploadImage = () => {
+    var promises = uploadUrl.map(async (image, index) => {
+      let filename = image.substring(image.lastIndexOf('/') + 1);
+      const task = storage().ref(`complaintPhotos/${filename}`).putFile(image);
+      //  promises.push(task);
+      task.on('state_changed', taskSnapshot => {
+        console.log(
+          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+        );
+      });
+
+      try {
+        await task;
+
+        await storage()
+          .ref(`complaintPhotos/${filename}`)
+          .getDownloadURL()
+          .then(url => {
+            setUploadUri(prevState => [...prevState, url]);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    });
+
+    Promise.all(promises)
+      .then(() => console.log(uploadUri))
+      .catch(err => console.log(err));
+  }; */
+  // end
+
+  const uploadImage = () => {
+    uploadUrl.map(async (image, index) => {
+      let filename = image.substring(image.lastIndexOf('/') + 1);
+      const task = storage().ref(`complaintPhotos/${filename}`).putFile(image);
+
+      task.on('state_changed', taskSnapshot => {
+        console.log(
+          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+        );
+      });
+
+      try {
+        await task;
+
+        await storage()
+          .ref(`complaintPhotos/${filename}`)
+          .getDownloadURL()
+          .then(res => {
+            console.log(res);
+            setUploadUri(res);
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    });
   };
 
   const pickImage = () => {
@@ -160,104 +219,106 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   ///End Bottom Sheet
 
   return (
-    <BottomSheetModalProvider>
-      <View style={{flex: 1}}>
-        <Header
-          leftContainerStyle={{marginLeft: 5}}
-          leftComponent={
-            <TouchableOpacity
-              onPress={() => navigation.navigate('HomeBottomTab')}>
-              <Icon name="arrow-back-ios" size={30} color="#fff" />
-            </TouchableOpacity>
-          }
-          centerComponent={
-            <Text
-              style={{
-                fontWeight: 'bold',
-                color: '#fff',
-                fontSize: 20,
-              }}>
-              Make A Complaint
-            </Text>
-          }
-          backgroundColor="#0a67fc"
-        />
-        <StatusBar barStyle="light-content" />
-        <ScrollView
-          nestedScrollEnabled
-          style={{padding: 20, marginTop: 30, height: '100%', marginBottom: 0}}>
-          <TextInput
-            value={complaintTitle}
-            onChangeText={val => setComplaintTitle(val)}
-            mode="outlined"
-            label="Complaint Title"
+    <View style={{flex: 1, marginBottom: 30}}>
+      <Header
+        leftContainerStyle={{marginLeft: 5}}
+        leftComponent={
+          <TouchableOpacity
+            onPress={() => navigation.navigate('HomeBottomTab')}>
+            <Icon name="arrow-back-ios" size={30} color="#fff" />
+          </TouchableOpacity>
+        }
+        centerComponent={
+          <Text
             style={{
-              // borderColor: 'black', borderWidth: 2,
-              borderRadius: 5,
-            }}
-          />
-          <TextInput
-            value={complaint}
-            onChangeText={val => setComplaint(val)}
-            mode="outlined"
-            multiline
-            numberOfLines={50}
-            label="Complaint"
-            style={{
-              //borderColor: 'black',
-              //   borderWidth: 2,
-              marginTop: 20,
-              height: 400,
-              textAlignVertical: 'top',
-              borderRadius: 5,
-            }}
-          />
-          <View
-            View
-            style={{marginTop: 15, flexDirection: 'row', alignSelf: 'center'}}>
-            {selectImage.map((item, index) => (
-              <PickImage item={item} key={index} />
-            ))}
-          </View>
-          <Card
-            containerStyle={{margin: 0}}
-            wrapperStyle={{
-              flexDirection: 'row',
-              justifyContent: 'space-evenly',
-              margin: 0,
+              fontWeight: 'bold',
+              color: '#fff',
+              fontSize: 20,
             }}>
-            <ImageButton
-              onPress={() => handlePresentModalPress()}
-              source={require('../../assets/icon/photo.png')}
-              title="Pick Images"
-            />
-            <Divider
-              width={2}
-              orientation="vertical"
-              style={{marginLeft: 20, marginRight: 20}}
-            />
-            <ImageButton
-              onPress={() => {}}
-              source={require('../../assets/icon/placeholder.png')}
-              title="Pick Location"
-            />
-          </Card>
-
-          {/* //!test button*/}
-
-          <MainButton
-            text="Submit"
-            btnStyle={{margin: 10, marginBottom: 100}}
-            onPress={() => SendData()}
+            Make A Complaint
+          </Text>
+        }
+        backgroundColor="#0a67fc"
+      />
+      <StatusBar barStyle="light-content" />
+      <ScrollView
+        nestedScrollEnabled
+        style={{padding: 20, marginTop: 30, height: '100%', marginBottom: 0}}>
+        <TextInput
+          value={complaintTitle}
+          onChangeText={val => setComplaintTitle(val)}
+          mode="outlined"
+          label="Complaint Title"
+          style={{
+            // borderColor: 'black', borderWidth: 2,
+            borderRadius: 5,
+          }}
+        />
+        <TextInput
+          value={complaint}
+          onChangeText={val => setComplaint(val)}
+          mode="outlined"
+          multiline
+          numberOfLines={50}
+          label="Complaint"
+          style={{
+            //borderColor: 'black',
+            //   borderWidth: 2,
+            marginTop: 20,
+            height: 400,
+            textAlignVertical: 'top',
+            borderRadius: 5,
+          }}
+        />
+        <View
+          View
+          style={{marginTop: 15, flexDirection: 'row', alignSelf: 'center'}}>
+          {selectImage.map((item, index) => (
+            <PickImage item={item} key={index} />
+          ))}
+        </View>
+        <Card
+          containerStyle={{margin: 0}}
+          wrapperStyle={{
+            flexDirection: 'row',
+            justifyContent: 'space-evenly',
+            margin: 0,
+          }}>
+          <ImageButton
+            onPress={() => handlePresentModalPress()}
+            source={require('../../assets/icon/photo.png')}
+            title="Pick Images"
           />
-        </ScrollView>
+          <Divider
+            width={2}
+            orientation="vertical"
+            style={{marginLeft: 20, marginRight: 20}}
+          />
+          <ImageButton
+            onPress={() => {}}
+            source={require('../../assets/icon/placeholder.png')}
+            title="Pick Location"
+          />
+        </Card>
+
+        {/* //!test button*/}
+        <Button title="test" onPress={() => uploadImage()} />
+        <Button title="test2" onPress={() => console.log(uploadUri)} />
+
+        <MainButton
+          text="Submit"
+          btnStyle={{margin: 10, marginBottom: 50}}
+          onPress={() => SendData()}
+        />
+      </ScrollView>
+      <BottomSheetModalProvider>
         <PickerSheetModal
           sheetRef={sheetRef}
           pickImage={pickImage}
           pickFromCamara={checkPermission}
         />
-      </View>
-    </BottomSheetModalProvider>
+      </BottomSheetModalProvider>
+    </View>
   );
 });
 

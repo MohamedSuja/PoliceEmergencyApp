@@ -41,7 +41,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer>
-      {user ? true ? <AdminStack /> : <AppStack /> : <AuthStack />}
+      {user ? false ? <OfficerStack /> : <AppStack /> : <AuthStack />}
       {/*  <Route name={'officer'} /> */}
     </NavigationContainer>
   );
