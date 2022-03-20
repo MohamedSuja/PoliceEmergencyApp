@@ -6,7 +6,7 @@ import {RFValue} from 'react-native-responsive-fontsize';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const UserSettings = () => {
+const OfficerSettings = () => {
   const {user, logout} = useContext(AuthContext);
 
   return (
@@ -46,4 +46,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserSettings;
+export default OfficerSettings;

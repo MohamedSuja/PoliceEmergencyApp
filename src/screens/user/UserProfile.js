@@ -6,14 +6,26 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AirbnbRating, Header} from 'react-native-elements';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 import {Divider} from 'react-native-elements';
 import ProfileMenu from '../../components/home/ProfileMenu';
+import {AuthContext} from '../../navigations/AuthProvider';
+import firestore from '@react-native-firebase/firestore';
 
 const UserProfile = () => {
+  const {user} = useContext(AuthContext);
+  const [userData, setUserData] = useState([]);
+
   useEffect(() => {
+    firestore()
+      .collection('user')
+      .doc(user.uid)
+      .get()
+      .then(querySnapshot => {
+        setUserData(querySnapshot.data());
+      });
     SystemNavigationBar.setNavigationColor('#7a004e', true);
 
     return () => {
@@ -50,7 +62,7 @@ const UserProfile = () => {
             fontWeight: '800',
             marginTop: 10,
           }}>
-          User Name
+          {userData.firstName + ' ' + userData.lastName}
         </Text>
         <View
           style={{
@@ -80,18 +92,18 @@ const UserProfile = () => {
         </View>
       </View>
       <ScrollView>
-        <ProfileMenu icon="mail" title="Email" text="user1234@gmailcom" />
+        <ProfileMenu icon="mail" title="Email" text={user.email} />
         <ProfileMenu
           icon="ios-phone-portrait-outline"
           title="Mobile"
-          text="077769690"
+          text={userData.phoneNumber}
         />
-        <ProfileMenu icon="home" title="Address" text="Balaluwewa,Palagala." />
-        <ProfileMenu icon="ios-person" title="Gender" text="Male" />
+        <ProfileMenu icon="home" title="Address" text={userData.address} />
+        <ProfileMenu icon="ios-person" title="Gender" text={userData.gender} />
         <ProfileMenu
           icon="md-calendar-sharp"
           title="Date Of Birth"
-          text="1 April 1997"
+          text={userData.dateOfBirth}
         />
       </ScrollView>
     </View>

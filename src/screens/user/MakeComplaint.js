@@ -32,42 +32,44 @@ import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../navigations/AuthProvider';
 import PickerSheetModal from '../../components/PickerSheetModal';
 import storage from '@react-native-firebase/storage';
+import LocationPicker from '../../components/LocationPicker';
+import LoadingModal from '../../components/LoadingModal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const uploadUrl = [
-  'file:///storage/emulated/0/Android/data/com.policeapp2/files/Pictures/016af012-4cb5-4f1b-8633-0cdacc3c0414.jpg',
-  'file:///storage/emulated/0/Android/data/com.policeapp2/files/Pictures/37e5a260-5d7d-4f3c-8089-e9e35883f90a.jpg',
-];
-
 const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
-  const ImageUrls = [];
   const [complaintTitle, setComplaintTitle] = useState(null);
   const [complaint, setComplaint] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
-  const {user} = useContext(AuthContext);
-  // ! test
-  const [selectImage, setSelectImage] = useState(ImageUrls);
-  const [uploadUri, setUploadUri] = useState([]);
+  const [selectImage, setSelectImage] = useState([]);
+  const {user, userIdNo} = useContext(AuthContext);
 
-  const SendData = () => {
+  //const [uploadUri, setUploadUri] = useState([]);
+  const [uploading, setUploading] = useState(false);
+
+  const SendData = async () => {
+    setUploading(true);
+    const imageUrl = await uploadImage();
+
     firestore()
       .collection('complaint')
-      .doc(user.uid)
-      .set({
+
+      .add({
+        complaintId: user.uid,
         complaintTitle: complaintTitle,
         complaint: complaint,
         location: userLocation,
-        selectImage: selectImage,
+        selectImage: imageUrl,
       })
       .then(() => {
-        alert(' You are recorded!');
+        setUploading(false);
+        alert('Recorded your complaint');
       });
   };
   //start
 
   /*   const uploadImage = () => {
-    var promises = uploadUrl.map(async (image, index) => {
+    var promises = selectImage.map(async (image, index) => {
       let filename = image.substring(image.lastIndexOf('/') + 1);
       const task = storage().ref(`complaintPhotos/${filename}`).putFile(image);
       //  promises.push(task);
@@ -97,38 +99,46 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   }; */
   // end
 
-  const uploadImage = () => {
-    uploadUrl.map(async (image, index) => {
-      let filename = image.substring(image.lastIndexOf('/') + 1);
-      const task = storage().ref(`complaintPhotos/${filename}`).putFile(image);
+  const uploadImage = async () => {
+    if (selectImage.length == 0) {
+      return null;
+    }
 
-      task.on('state_changed', taskSnapshot => {
-        console.log(
-          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-        );
-      });
+    const uploadUri = selectImage[0];
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
 
-      try {
-        await task;
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
 
-        await storage()
-          .ref(`complaintPhotos/${filename}`)
-          .getDownloadURL()
-          .then(res => {
-            console.log(res);
-            setUploadUri(res);
-          });
-      } catch (e) {
-        console.log(e);
-      }
-    });
+    //setUploading(true);
+
+    const storageRef = storage().ref(`complaintPhotos/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+
+      // setUploading(false);
+      console.log(
+        'Image uplaoded!',
+        'Your image has been uploaded to the firebase cloud stroage Successsfully!',
+      );
+      return url;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   };
+
+  //end
 
   const pickImage = () => {
     ImageCropPicker.openPicker({
       width: 400,
       height: 300,
-      // TODO: multiple: true,
+      //  multiple: true,
       cropping: true,
     })
       .then(image => {
@@ -218,6 +228,10 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
 
   ///End Bottom Sheet
 
+  ///Location Picker
+  const LocationsheetRef = useRef(null);
+  ///End Location Picker
+
   return (
     <View style={{flex: 1, marginBottom: 30}}>
       <Header
@@ -295,16 +309,18 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
             style={{marginLeft: 20, marginRight: 20}}
           />
           <ImageButton
-            onPress={() => {}}
+            onPress={() => {
+              LocationsheetRef.current?.present();
+            }}
             source={require('../../assets/icon/placeholder.png')}
             title="Pick Location"
           />
         </Card>
 
-        {/* //!test button*/}
+        {/* //!test button
         <Button title="test" onPress={() => uploadImage()} />
-        <Button title="test2" onPress={() => console.log(uploadUri)} />
-
+        <Button title="test2" onPress={() => console.log(uploadImage())} />
+*/}
         <MainButton
           text="Submit"
           btnStyle={{margin: 10, marginBottom: 50}}
@@ -317,7 +333,9 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
           pickImage={pickImage}
           pickFromCamara={checkPermission}
         />
+        <LocationPicker sheetRef={LocationsheetRef} />
       </BottomSheetModalProvider>
+      <LoadingModal visible={uploading} />
     </View>
   );
 });

@@ -131,7 +131,7 @@ const AddPost = gestureHandlerRootHOC(({navigation}) => {
         <Text>Post Privacy</Text>
         <View
           style={{
-            width: RFValue('100'),
+            width: RFValue('120'),
             borderRadius: 5,
           }}>
           <Picker

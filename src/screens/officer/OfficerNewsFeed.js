@@ -1,19 +1,15 @@
-import {
-  View,
-  Text,
-  StatusBar,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {View, Text, StatusBar, ScrollView, Button} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import {Divider, Header} from 'react-native-elements';
-import PostCard from '../../components/PostCard';
+import {Divider} from 'react-native-elements';
 import AppHeader from '../../components/AppHeader';
+import PostCard from '../../components/PostCard';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
 import firestore from '@react-native-firebase/firestore';
-import {AuthContext} from '../../navigations/AuthProvider';
 import PostCard2 from '../../components/PostCard2';
+import {RFValue} from 'react-native-responsive-fontsize';
+import {AuthContext} from '../../navigations/AuthProvider';
 
-const NewsFeed = ({navigation}) => {
+const OfficerNewsFeed = ({navigation}) => {
   const [postData, setPostData] = useState([]);
   const {user, userIdNo} = useContext(AuthContext);
 
@@ -32,30 +28,20 @@ const NewsFeed = ({navigation}) => {
 
   useEffect(() => {
     getData();
-    //  SystemNavigationBar.setNavigationColor('#1a5200', true);
+    SystemNavigationBar.setNavigationColor('#1a5200', true);
   }, []);
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, marginBottom: RFValue('50')}}>
       <StatusBar barStyle="light-content" />
 
       <AppHeader
-        navigation={() => navigation.navigate('HomeBottomTab')}
-        title={'NewsFeed'}
+        navigation={() => navigation.navigate('OfficerBottomTab')}
+        title={'Feed'}
+        backgroundColor={'#1a5200'}
       />
       <Divider color="#000" />
+
       <ScrollView>
-        {/* {CardData.map((item, index) => (
-          <PostCard
-            key={index}
-            indexData={index}
-            Title={item.Title}
-            Subject={item.Subject}
-            Date={item.Date}
-            ifAdmin={item.ifAdmin}
-            ImageFiles={item.ImageFiles}
-            navigation={navigation}
-          />
-        ))} */}
         {postData
           ? postData.map((item, index) => (
               <PostCard2
@@ -75,4 +61,4 @@ const NewsFeed = ({navigation}) => {
   );
 };
 
-export default NewsFeed;
+export default OfficerNewsFeed;

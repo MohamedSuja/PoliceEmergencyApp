@@ -16,9 +16,8 @@ import {HelperText, TextInput} from 'react-native-paper';
 import validator from 'validator';
 
 const LoginAccount = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const {setUser, login} = useContext(AuthContext);
+  const {setUser, login, password, setPassword, email, setEmail} =
+    useContext(AuthContext);
   const [validateEmail, setValidateEmail] = useState(false);
   const [validatePassword, setValidatePassword] = useState(false);
 

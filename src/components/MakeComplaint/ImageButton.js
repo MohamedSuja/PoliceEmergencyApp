@@ -1,5 +1,6 @@
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 const ImageButton = ({onPress, source, title}) => {
   return (
@@ -22,7 +23,10 @@ const ImageButton = ({onPress, source, title}) => {
           }}
           source={source}
         />
-        <Text>{title}</Text>
+        <Text
+          style={{color: '#000', fontSize: RFValue('12'), fontWeight: '900'}}>
+          {title}
+        </Text>
       </TouchableOpacity>
     </View>
   );

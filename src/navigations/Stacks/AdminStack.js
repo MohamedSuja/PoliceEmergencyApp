@@ -5,6 +5,7 @@ import AddPost from '../../screens/admin/AddPost';
 import ShowComplaint from '../../screens/admin/ShowComplaint';
 import AdminEmergency from '../../screens/admin/AdminEmergency';
 import ViewComplaint from '../../screens/admin/ViewComplaint';
+import ShowUser from '../../screens/admin/ShowUser';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ const AdminStack = () => {
       <Stack.Screen name="ShowComplaint" component={ShowComplaint} />
       <Stack.Screen name="AdminEmergency" component={AdminEmergency} />
       <Stack.Screen name="ViewComplaint" component={ViewComplaint} />
+      <Stack.Screen name="ShowUser" component={ShowUser} />
     </Stack.Navigator>
   );
 };

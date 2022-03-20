@@ -59,10 +59,10 @@ const FineModal = props => {
           flex: 1,
           justifyContent: 'center',
           backgroundColor: 'rgba(0, 0, 0,0.4)',
-          paddingTop: 40,
-          paddingLeft: 10,
-          paddingRight: 10,
-          paddingBottom: 30,
+          paddingTop: RFValue('30'),
+          paddingLeft: RFValue('10'),
+          paddingRight: RFValue('10'),
+          paddingBottom: RFValue('55'),
         }}>
         <View style={{flex: 1, backgroundColor: '#fff', borderRadius: 10}}>
           <Text

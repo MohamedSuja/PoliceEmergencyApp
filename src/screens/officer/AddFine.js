@@ -48,7 +48,7 @@ const AddFine = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <AppHeader
-        navigation={() => navigation.navigate('OfficerHome')}
+        navigation={() => navigation.navigate('OfficerBottomTab')}
         title={'Make Penalty'}
         backgroundColor={'#0052fe'}
       />
@@ -89,9 +89,6 @@ const AddFine = ({navigation}) => {
         btnPress={() => setModalVisible(false)}
         closeBtn={() => setModalVisible(false)}
         chacked={chacked}
-        btnPress={() => {
-          console.log(addFine);
-        }}
         listData={addFine}
       />
       <View style={{margin: 10, marginBottom: 50}}>

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -22,6 +22,8 @@ import BottomTab from '../../components/home/BottomTab';
 import LinearGradient from 'react-native-linear-gradient';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../navigations/AuthProvider';
+import {RFValue} from 'react-native-responsive-fontsize';
+import LoadingModal from '../../components/LoadingModal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const usersCollection = firestore().collection('user');
@@ -29,15 +31,18 @@ const usersCollection = firestore().collection('user');
 const Home = ({navigation}) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  const {userData, setUserData, user} = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const {userData, setUserData, user, userLastName, userFirstName, userIdNo} =
+    useContext(AuthContext);
+
+  /*   useEffect(() => {
     return navigation.addListener('focus', () => {
       // The screen is focused
       // Call any action
       SystemNavigationBar.setNavigationColor('#0a67fc', true);
     });
-  }, [navigation]);
+  }, [navigation]); */
 
   const headerY = scrollY.interpolate({
     inputRange: [0, 300],
@@ -69,28 +74,30 @@ const Home = ({navigation}) => {
     outputRange: [1, 0],
     extrapolate: 'clamp',
   });
-  const test = () => {
-    const userFile = firestore()
+  const getData = async () => {
+    await firestore()
       .collection('user')
       .doc(user.uid)
       .get()
       .then(querySnapshot => {
-        console.log(querySnapshot.data());
+        //  console.log(querySnapshot.data());
         setUserData(querySnapshot.data());
+
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
       });
   };
 
   useEffect(() => {
-    const userFile = firestore()
-      .collection('user')
-      .doc(user.uid)
-      .get()
-      .then(querySnapshot => {
-        console.log(querySnapshot.data());
-        setUserData(querySnapshot.data());
-      });
-    return () => userFile();
-  }, [user.uid]);
+    // setLoading(true);
+    getData();
+    navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call any action
+      SystemNavigationBar.setNavigationColor('#0a67fc', true);
+    });
+  }, []);
 
   return (
     <Animated.View style={{flex: 1, marginBottom: 0}}>
@@ -198,7 +205,9 @@ const Home = ({navigation}) => {
                 marginLeft: 40,
                 alignSelf: 'center',
               }}>
-              {userData.firstName} {userData.lastName}
+              {userData
+                ? `${userData.firstName}  ${userData.lastName}`
+                : `${userFirstName} ${userLastName}`}
             </Text>
           </Animated.View>
           <Animated.Text
@@ -209,7 +218,7 @@ const Home = ({navigation}) => {
               alignSelf: 'center',
               opacity: HideSubText,
             }}>
-            ID {userData.idNo}
+            ID {userData ? userData.idNo : userIdNo}
           </Animated.Text>
         </Animated.View>
         <Divider style={{height: 5, width: '100%'}} />
@@ -232,23 +241,25 @@ const Home = ({navigation}) => {
         <MenuButton
           title="Find A Police Station"
           icon={require('../../assets/icon/map.png')}
-          onPress={() => test()}
+          onPress={() => {}}
         />
-        <MenuButton
+        {/*       <MenuButton
           title="Fire Service"
           icon={require('../../assets/icon/fire-truck.png')}
         />
         <MenuButton
           title=" Ambulance Service"
           icon={require('../../assets/icon/ambulance.png')}
-        />
+        /> */}
         <MenuButton
           title="Get Emergency Cop"
           icon={require('../../assets/icon/alarm.png')}
           onPress={() => navigation.navigate('Emergency')}
         />
+        <View style={{height: RFValue('150')}}></View>
       </Animated.ScrollView>
       {/*  <BottomTab /> */}
+      <LoadingModal visible={loading} />
     </Animated.View>
   );
 };

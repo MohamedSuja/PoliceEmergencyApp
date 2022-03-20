@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -10,6 +10,14 @@ const AuthProvider = ({children}) => {
   const [userFirstName, setUserFirstName] = useState('');
   const [userLastName, setUserLastName] = useState('');
   const [userData, setUserData] = useState([]);
+  const [address, setAddress] = useState('');
+  const [gender, setGender] = useState('Male');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState();
+  const [pickLocation, setPickLocation] = useState();
+  const [promote, setPromote] = useState('public');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const addUserData = data => {
     firestore().collection('user').doc(data.user.uid).set({
@@ -17,6 +25,11 @@ const AuthProvider = ({children}) => {
       firstName: userFirstName,
       lastName: userLastName,
       idNo: userIdNo,
+      address: address,
+      gender: gender,
+      dateOfBirth: dateOfBirth,
+      phoneNumber: phoneNumber,
+      promote: promote,
     });
   };
 
@@ -35,6 +48,19 @@ const AuthProvider = ({children}) => {
         //Home Page
         userData,
         setUserData,
+        //2
+        address,
+        setAddress,
+        gender,
+        setGender,
+        dateOfBirth,
+        setDateOfBirth,
+        phoneNumber,
+        setPhoneNumber,
+        email,
+        setEmail,
+        password,
+        setPassword,
 
         register: async (email, password) => {
           try {
@@ -48,6 +74,7 @@ const AuthProvider = ({children}) => {
             alert(e);
           }
         },
+
         login: async (email, password) => {
           try {
             await auth().signInWithEmailAndPassword(email, password);

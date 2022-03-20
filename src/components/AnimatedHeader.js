@@ -3,7 +3,8 @@ import React from 'react';
 import {Avatar, Badge} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/Ionicons';
 
-const AnimatedHeader = () => {
+const AnimatedHeader = props => {
+  const {onPress, title, subTitle} = props;
   return (
     <Animated.View
       style={{
@@ -13,10 +14,7 @@ const AnimatedHeader = () => {
         padding: 20,
         zIndex: 1000,
       }}>
-      <TouchableOpacity
-        onPress={() => {
-          //navigation.navigate('UserNotification');
-        }}>
+      <TouchableOpacity onPress={onPress}>
         <Animated.View
           style={{
             marginTop: 10,
@@ -69,7 +67,7 @@ const AnimatedHeader = () => {
             marginLeft: 40,
             alignSelf: 'center',
           }}>
-          suja
+          {title}
         </Text>
       </Animated.View>
       <Animated.Text
@@ -80,7 +78,7 @@ const AnimatedHeader = () => {
           alignSelf: 'center',
           opacity: 1,
         }}>
-        ID
+        {subTitle}
       </Animated.Text>
     </Animated.View>
   );

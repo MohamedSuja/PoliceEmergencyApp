@@ -28,7 +28,7 @@ const Emergency = ({navigation}) => {
         location: userLocation,
       })
       .then(() => {
-        alert(' You are recorded!');
+        console.log(' You are recorded!');
       });
   };
 
@@ -78,7 +78,7 @@ const Emergency = ({navigation}) => {
       />
       <TouchableOpacity
         onPress={() => {
-          //  setModalVisible(true);
+          setModalVisible(true);
           SendData();
         }}
         activeOpacity={0.7}

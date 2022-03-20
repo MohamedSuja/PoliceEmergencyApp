@@ -15,12 +15,19 @@ import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 
 const ImageScreenWidth = Dimensions.get('window').width;
 
-const PostCard = props => {
+const PostCard2 = props => {
   const {Title, Subject, Date, ImageFiles, ifAdmin, navigation, indexData} =
     props;
 
   const naviToView = i => {
-    navigation.navigate('NewsView', {indexData: i});
+    navigation.navigate('NewsView', {
+      indexData: indexData,
+      Title: Title,
+      Subject: Subject,
+      Date: Date,
+      ImageFiles: ImageFiles,
+      ifAdmin: ifAdmin,
+    });
   };
 
   return (
@@ -31,58 +38,33 @@ const PostCard = props => {
       <Text numberOfLines={3} style={{flexShrink: 1}}>
         {Subject}
       </Text>
-      <TouchableOpacity onPress={() => naviToView(indexData)}>
+      <TouchableOpacity onPress={() => naviToView()}>
         <Text style={{fontWeight: 'bold', color: '#000'}}> SeeMore</Text>
       </TouchableOpacity>
       {/*  ///Image fb Card */}
-      <Button title="test" onPress={() => console.log(ImageFiles)} />
+
       <View
         style={{
           flexWrap: 'wrap',
           alignContent: 'stretch',
           marginTop: 10,
-          height: 310,
+          //height: 310,
         }}>
-        {ImageFiles.slice(0, 3).map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            activeOpacity={0.7}
-            onPress={() => naviToView(indexData)}>
+        {ImageFiles != null ? (
+          <TouchableOpacity onPress={() => naviToView()} activeOpacity={0.9}>
             <Image
               style={{
-                width: 170,
-                height: index == 0 ? 304 : 150,
+                width: '100%',
+                height: 304,
                 marginTop: 4,
                 resizeMode: 'cover',
               }}
               source={{
-                uri: item.localUrl,
+                uri: ImageFiles,
               }}
             />
-            {index == 2 ? (
-              <View
-                style={{
-                  width: 170,
-                  height: index == 0 ? 304 : 150,
-                  marginTop: 4,
-                  position: 'absolute',
-                  alignItems: 'center',
-                  opacity: 0.7,
-                  backgroundColor: '#fff',
-                }}>
-                <Text
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: 25,
-                    marginTop: 49,
-                    color: '#000',
-                  }}>
-                  See More +
-                </Text>
-              </View>
-            ) : null}
           </TouchableOpacity>
-        ))}
+        ) : null}
       </View>
 
       <Divider style={{height: 10, marginBottom: 10}} />
@@ -119,4 +101,4 @@ const PostCard = props => {
   );
 };
 
-export default PostCard;
+export default PostCard2;

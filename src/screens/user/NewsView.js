@@ -18,7 +18,7 @@ const WindowWidth = Dimensions.get('window').width;
 
 const NewsView = ({route, navigation}) => {
   const {CardData} = useContext(AuthContext);
-  const {indexData} = route.params;
+  const {Title, Subject, Date, ImageFiles, ifAdmin, indexData} = route.params;
   return (
     <SafeAreaView style={{alignItems: 'center', flex: 1}}>
       <StatusBar
@@ -36,10 +36,8 @@ const NewsView = ({route, navigation}) => {
         }
         centerComponent={
           <View style={{alignItems: 'center'}}>
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-              {CardData[indexData].Title}
-            </Text>
-            <Text> {CardData[indexData].Date}</Text>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>{Title}</Text>
+            <Text> {Date}</Text>
           </View>
         }
       />
@@ -50,20 +48,20 @@ const NewsView = ({route, navigation}) => {
       />
       <View>
         <Text numberOfLines={50} style={{flexShrink: 1}}>
-          {CardData[indexData].Subject}
+          {Subject}
         </Text>
       </View>
 
       <Divider width={1} style={{width: WindowWidth - 100, margin: 10}} />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => console.log(Subject)}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Icon name="perm-device-information" size={30} color="#535454" />
           <Text> Inform Us</Text>
         </View>
       </TouchableOpacity>
       <ScrollView style={{marginTop: 10}}>
-        {CardData[indexData].ImageFiles.map((item, index) => (
-          <View key={index} style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center'}}>
+          {ImageFiles ? (
             <Image
               style={{
                 height: 250,
@@ -71,11 +69,12 @@ const NewsView = ({route, navigation}) => {
                 resizeMode: 'contain',
                 margin: 5,
               }}
-              source={{uri: item.localUrl}}
+              source={{uri: ImageFiles}}
             />
-            <Divider width={1} style={{width: WindowWidth - 20}} />
-          </View>
-        ))}
+          ) : null}
+
+          <Divider width={1} style={{width: WindowWidth - 20}} />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
