@@ -241,7 +241,7 @@ const Home = ({navigation}) => {
         <MenuButton
           title="Find A Police Station"
           icon={require('../../assets/icon/map.png')}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('PoliceStationMap')}
         />
         {/*       <MenuButton
           title="Fire Service"

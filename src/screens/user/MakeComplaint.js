@@ -36,13 +36,17 @@ import LocationPicker from '../../components/LocationPicker';
 import LoadingModal from '../../components/LoadingModal';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const initialState = {
+  latitude: 7.9824358,
+  longitude: 80.5292226,
+};
 
 const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const [complaintTitle, setComplaintTitle] = useState(null);
   const [complaint, setComplaint] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
   const [selectImage, setSelectImage] = useState([]);
   const {user, userIdNo} = useContext(AuthContext);
+  const [curentPosition, setCurentPosition] = useState(initialState);
 
   //const [uploadUri, setUploadUri] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -58,7 +62,7 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
         complaintId: user.uid,
         complaintTitle: complaintTitle,
         complaint: complaint,
-        location: userLocation,
+        location: curentPosition,
         selectImage: imageUrl,
       })
       .then(() => {
@@ -210,7 +214,7 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
   const sheetRef = useRef(null);
 
   // variables
-  const snapPoints = useMemo(() => [250], []);
+  const snapPoints = useMemo(() => [350], []);
 
   // callbacks
   const handleSheetChange = useCallback(index => {
@@ -313,7 +317,7 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
               LocationsheetRef.current?.present();
             }}
             source={require('../../assets/icon/placeholder.png')}
-            title="Pick Location"
+            title="Add Location"
           />
         </Card>
 
@@ -333,7 +337,11 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
           pickImage={pickImage}
           pickFromCamara={checkPermission}
         />
-        <LocationPicker sheetRef={LocationsheetRef} />
+        <LocationPicker
+          sheetRef={LocationsheetRef}
+          curentPosition={curentPosition}
+          setCurentPosition={setCurentPosition}
+        />
       </BottomSheetModalProvider>
       <LoadingModal visible={uploading} />
     </View>

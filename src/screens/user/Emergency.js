@@ -1,4 +1,11 @@
-import {View, Text, TouchableOpacity, Dimensions, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Dimensions,
+  Modal,
+  Button,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import AppHeader from '../../components/AppHeader';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
@@ -8,32 +15,108 @@ import {TextInput} from 'react-native-paper';
 import EmergencyModal from '../../components/EmergencyModal';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../navigations/AuthProvider';
+import MapView, {Callout, Marker} from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
+import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
+const initialState = {
+  latitude: 7.9824358,
+  longitude: 80.5292226,
+};
+
 const Emergency = ({navigation}) => {
-  const [emergencyType, setEmergencyType] = useState('TroubleForOther');
+  const [emergencyType, setEmergencyType] = useState('Excident');
   const [emergencyDiscription, setEmergencyDiscription] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [userLocation, setUserLocation] = useState(null);
+  const [userData, setUserData] = useState([]);
   const {user} = useContext(AuthContext);
+  const [curentPosition, setCurentPosition] = useState(initialState);
 
+  ///start firebase
   const SendData = () => {
     firestore()
       .collection('emergency')
-      .doc(user.uid)
-      .set({
+      .add({
+        userId: user.uid,
         emergencyType: emergencyType,
         emergencyDiscription: emergencyDiscription,
-        location: userLocation,
+        location: curentPosition,
+        date: firestore.Timestamp.fromDate(new Date()),
+        name: userData.firstName + ' ' + userData.lastName,
       })
       .then(() => {
         console.log(' You are recorded!');
       });
   };
 
+  const getUserData = async id => {
+    try {
+      await firestore()
+        .collection('user')
+        .doc(id)
+        .get()
+        .then(querySnapshot => {
+          setUserData(querySnapshot.data());
+        });
+    } catch (error) {
+      return error;
+    }
+  };
+  ///end firebase
+
+  ///start map
+
+  const getMyPosition = () => {
+    Geolocation.getCurrentPosition(
+      info => {
+        console.log(info);
+        setCurentPosition({
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+        });
+      },
+      e => alert(e.message),
+    );
+  };
+
+  const getPermission = () => {
+    request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      .then(result => console.log(result))
+      .catch(error => console.log(error));
+  };
+
+  const checkPermission = () => {
+    check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION).then(result => {
+      console.log(result);
+
+      switch (result) {
+        case RESULTS.UNAVAILABLE:
+          alert('This feature is not available on this device');
+          break;
+
+        case RESULTS.DENIED:
+          getPermission();
+          break;
+
+        case RESULTS.GRANTED:
+          console.log('The permission is granted');
+          getMyPosition();
+          break;
+
+        case RESULTS.BLOCKED:
+          alert('The permission is denied and not requestable anymore');
+          break;
+      }
+    });
+  };
+
+  ///end map
   useEffect(() => {
     SystemNavigationBar.setNavigationColor('#e00074', true);
+    checkPermission();
+    getUserData(user.uid);
   }, []);
 
   return (
@@ -58,14 +141,11 @@ const Emergency = ({navigation}) => {
           selectedValue={emergencyType}
           mode="dialog"
           onValueChange={(itemValue, itemIndex) => setEmergencyType(itemValue)}>
-          <Picker.Item
-            label="Trouble For Other"
-            value="TroubleForOther"
-            style={{backgroundColor: 'red'}}
-          />
+          <Picker.Item label="Excident" value="Excident" />
+          <Picker.Item label="Trouble For Other" value="TroubleForOther" />
           <Picker.Item label="Fighting" value="Fighting" />
           <Picker.Item label="Robbery" value="Robbery" />
-          <Picker.Item label="Excident" value="Excident" />
+          <Picker.Item label="Other" value="Other" />
         </Picker>
       </View>
 
@@ -76,6 +156,45 @@ const Emergency = ({navigation}) => {
         onChangeText={val => setEmergencyDiscription(val)}
         value={emergencyDiscription}
       />
+
+      <MapView
+        loadingEnableds
+        showsUserLocation
+        style={{
+          height: '100%',
+          width: '100%',
+        }}
+        onLongPress={e => {
+          setCurentPosition({
+            latitude: e.nativeEvent.coordinate.latitude,
+            longitude: e.nativeEvent.coordinate.longitude,
+          });
+          console.log(e.nativeEvent.coordinate);
+        }}
+        initialRegion={{
+          latitude: 7.9824358,
+          longitude: 80.5292226,
+          latitudeDelta: 2.5,
+          longitudeDelta: 0.0421,
+        }}>
+        <Marker
+          draggable
+          onDragEnd={e => {
+            setCurentPosition({
+              latitude: e.nativeEvent.coordinate.latitude,
+              longitude: e.nativeEvent.coordinate.longitude,
+            });
+            console.log(e.nativeEvent.coordinate);
+          }}
+          coordinate={{
+            ...curentPosition,
+          }}>
+          <Callout>
+            <Text>My Location</Text>
+          </Callout>
+        </Marker>
+      </MapView>
+
       <TouchableOpacity
         onPress={() => {
           setModalVisible(true);

@@ -49,13 +49,13 @@ const Routes = () => {
   return (
     <NavigationContainer>
       {/*       {user ? false ? <OfficerStack /> : <AppStack /> : <AuthStack />} */}
-      <Route
+      {/* <Route
         name={
           email == 'admin@gmail.com' && password == 'Admin@123' ? 'admin' : user
         }
         stack={userType}
-      />
-      {/*    <AdminStack /> */}
+      /> */}
+      <AdminStack />
     </NavigationContainer>
   );
 };

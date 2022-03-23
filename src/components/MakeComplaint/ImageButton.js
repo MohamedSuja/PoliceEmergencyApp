@@ -24,7 +24,13 @@ const ImageButton = ({onPress, source, title}) => {
           source={source}
         />
         <Text
-          style={{color: '#000', fontSize: RFValue('12'), fontWeight: '900'}}>
+          style={{
+            color: '#000',
+            fontSize: RFValue('12'),
+            fontWeight: '900',
+            width: RFValue('120'),
+            textAlign: 'center',
+          }}>
           {title}
         </Text>
       </TouchableOpacity>

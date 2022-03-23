@@ -6,14 +6,20 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import AppHeader from '../../components/AppHeader';
 import AnimatedHeader from '../../components/AnimatedHeader';
 import MenuButton from '../../components/home/MenuButton';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const AdminHome = ({navigation}) => {
+  useEffect(() => {
+    navigation.addListener('focus', () => {
+      SystemNavigationBar.setNavigationColor('#0a67fc', true);
+    });
+  }, []);
   return (
     <View style={{flex: 1}}>
       <StatusBar
