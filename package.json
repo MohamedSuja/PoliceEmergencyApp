@@ -22,6 +22,7 @@
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
     "lottie-react-native": "^5.0.1",
+    "moment": "^2.29.1",
     "react": "17.0.2",
     "react-native": "0.66.4",
     "react-native-bouncy-checkbox": "^2.1.10",

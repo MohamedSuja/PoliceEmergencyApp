@@ -1,4 +1,4 @@
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, ScrollView, RefreshControl} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AppHeader from '../../components/AppHeader';
 import EmerrgencyCard from '../../components/EmerrgencyCard';
@@ -12,7 +12,13 @@ const AdminEmergency = ({navigation}) => {
   const [loading, setLoading] = useState(true);
   //const {user, userIdNo} = useContext(AuthContext);
 
-  const getData = async postList => {
+  const [isFetching, setIsFetching] = useState(false);
+  const onRefresh = () => {
+    setIsFetching(true);
+    getData();
+  };
+
+  const getData = async () => {
     var list = [];
     var snapshot = await firestore()
       .collection('emergency')
@@ -29,6 +35,9 @@ const AdminEmergency = ({navigation}) => {
     setTimeout(() => {
       setLoading(false);
     }, 1000);
+    setTimeout(() => {
+      setIsFetching(false);
+    }, 500);
   };
 
   useEffect(() => {
@@ -43,16 +52,22 @@ const AdminEmergency = ({navigation}) => {
         backgroundColor={'#1a5200'}
         navigation={() => navigation.navigate('AdminHome')}
       />
-      {postData.map((item, index) => (
-        <EmerrgencyCard
-          key={index}
-          onPressView={async () => {}}
-          time={item.date}
-          emergency={item.emergencyType}
-          request={item.name}
-          discription={item.emergencyDiscription}
-        />
-      ))}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isFetching} onRefresh={onRefresh} />
+        }>
+        {postData.map((item, index) => (
+          <EmerrgencyCard
+            key={index}
+            onPressView={async () => {}}
+            time={item.date}
+            emergency={item.emergencyType}
+            request={item.name}
+            discription={item.emergencyDiscription}
+          />
+        ))}
+      </ScrollView>
+
       {/*  <Button title="test" onPress={() => console.log()} /> */}
       <LoadingModal visible={loading} />
     </View>
