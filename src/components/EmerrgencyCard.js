@@ -24,6 +24,7 @@ const EmerrgencyCard = props => {
     request,
     discription,
     onPressDel,
+    viewed,
   } = props;
   return (
     <ListItem.Swipeable
@@ -47,7 +48,9 @@ const EmerrgencyCard = props => {
         justifyContent: 'center',
       }}>
       <LinearGradient
-        colors={['#8EC5FC', '#E0C3FC']}
+        colors={
+          viewed ? ['#8EC5FC', '#E0C3FC'] : ['#DD5E89', '#F7BB97', '#DD5E89']
+        }
         start={{x: 0, y: 1}}
         end={{x: 1, y: 1}}
         style={styles.linearGradient}>

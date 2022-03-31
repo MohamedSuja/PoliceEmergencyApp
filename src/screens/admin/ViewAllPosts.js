@@ -10,9 +10,8 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {AuthContext} from '../../navigations/AuthProvider';
 import LoadingModal from '../../components/LoadingModal';
 
-const OfficerNewsFeed = ({navigation}) => {
+const ViewAllPosts = ({navigation}) => {
   const [postData, setPostData] = useState([]);
-  const {user, userIdNo} = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
 
   const getData = async postList => {
@@ -69,7 +68,9 @@ const OfficerNewsFeed = ({navigation}) => {
   };
 
   useEffect(() => {
-    getData();
+    navigation.addListener('focus', () => {
+      getData();
+    });
     SystemNavigationBar.setNavigationColor('#1a5200', true);
   }, []);
   return (
@@ -77,8 +78,8 @@ const OfficerNewsFeed = ({navigation}) => {
       <StatusBar barStyle="light-content" />
 
       <AppHeader
-        navigation={() => navigation.navigate('OfficerBottomTab')}
-        title={'Feed'}
+        navigation={() => navigation.navigate('AdminHome')}
+        title={'View All Posts'}
         backgroundColor={'#1a5200'}
       />
       <Divider color="#000" />
@@ -92,14 +93,15 @@ const OfficerNewsFeed = ({navigation}) => {
                 Title={item.postTitle}
                 Subject={item.post}
                 date={item.postTime}
-                ifAdmin={user.uid == item.postId ? true : false}
+                ifAdmin={true}
+                postPrivacy={item.postPrivacy}
                 ImageFiles={item.selectImage}
                 navigation={navigation}
-                navi={'OfficerNewsFeed'}
+                navi={'ViewAllPosts'}
                 deleteCard={() => handleDelete(item.docId)}
-                information={item.information}
-                admin={false}
                 docId={item.docId}
+                information={item.information}
+                admin={true}
               />
             ))
           : null}
@@ -109,4 +111,4 @@ const OfficerNewsFeed = ({navigation}) => {
   );
 };
 
-export default OfficerNewsFeed;
+export default ViewAllPosts;

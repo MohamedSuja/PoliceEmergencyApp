@@ -260,7 +260,7 @@ const AddEmergencyPost = gestureHandlerRootHOC(({navigation}) => {
             source={require('../../assets/icon/photo.png')}
             title="Pick Images"
           />
-          <Divider
+          {/*  <Divider
             width={2}
             orientation="vertical"
             style={{marginLeft: 20, marginRight: 20}}
@@ -271,7 +271,7 @@ const AddEmergencyPost = gestureHandlerRootHOC(({navigation}) => {
             }}
             source={require('../../assets/icon/placeholder.png')}
             title="Pick Location"
-          />
+          /> */}
         </Card>
 
         <MainButton
@@ -290,7 +290,7 @@ const AddEmergencyPost = gestureHandlerRootHOC(({navigation}) => {
           pickImage={pickImage}
           pickFromCamara={checkPermission}
         />
-        <LocationPicker sheetRef={LocationsheetRef} />
+        {/*   <LocationPicker sheetRef={LocationsheetRef} /> */}
       </BottomSheetModalProvider>
       <LoadingModal visible={loading} transparent={true} />
     </View>

@@ -9,6 +9,7 @@ import Emergency from '../../screens/user/Emergency';
 import HomeBottomTab from '../HomeBottomTab';
 import UserNotification from '../../screens/user/UserNotification';
 import PoliceStationMap from '../../screens/user/PoliceStationMap';
+import PaymentCard from '../../screens/user/PaymentCard';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,7 @@ const AppStack = () => {
       <Stack.Screen name="Emergency" component={Emergency} />
       <Stack.Screen name="UserNotification" component={UserNotification} />
       <Stack.Screen name="PoliceStationMap" component={PoliceStationMap} />
+      <Stack.Screen name="PaymentCard" component={PaymentCard} />
     </Stack.Navigator>
   );
 };

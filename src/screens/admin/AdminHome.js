@@ -11,6 +11,7 @@ import AppHeader from '../../components/AppHeader';
 import AnimatedHeader from '../../components/AnimatedHeader';
 import MenuButton from '../../components/home/MenuButton';
 import SystemNavigationBar from 'react-native-system-navigation-bar';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -21,7 +22,7 @@ const AdminHome = ({navigation}) => {
     });
   }, []);
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, marginBottom: RFValue('55')}}>
       <StatusBar
         translucent
         backgroundColor={'transparent'}
@@ -46,7 +47,7 @@ const AdminHome = ({navigation}) => {
           onPress={() => navigation.navigate('ShowComplaint')}
         />
         <MenuButton
-          title="Admin Emergency"
+          title="Show Emergency"
           icon={require('../../assets/icon/alarm2.png')}
           onPress={() => navigation.navigate('AdminEmergency')}
         />
@@ -54,6 +55,16 @@ const AdminHome = ({navigation}) => {
           title="View All Users"
           icon={require('../../assets/icon/profile.png')}
           onPress={() => navigation.navigate('ShowUser')}
+        />
+        <MenuButton
+          title="View All Posts"
+          icon={require('../../assets/icon/newspaper.png')}
+          onPress={() => navigation.navigate('ViewAllPosts')}
+        />
+        <MenuButton
+          title="Police Stations"
+          icon={require('../../assets/icon/police-station-2.png')}
+          onPress={() => navigation.navigate('PoliceStationMap', {admin: true})}
         />
       </ScrollView>
     </View>

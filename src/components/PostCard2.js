@@ -12,28 +12,48 @@ import {
 import React from 'react';
 import {Card, Divider} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
+import moment from 'moment';
 
 const ImageScreenWidth = Dimensions.get('window').width;
 
 const PostCard2 = props => {
-  const {Title, Subject, Date, ImageFiles, ifAdmin, navigation, indexData} =
-    props;
+  const {
+    Title,
+    Subject,
+    date,
+    ImageFiles,
+    ifAdmin,
+    navigation,
+    indexData,
+    inform,
+    docId,
+    navi,
+    deleteCard,
+    postPrivacy,
+    information,
+    admin,
+  } = props;
 
   const naviToView = i => {
     navigation.navigate('NewsView', {
       indexData: indexData,
       Title: Title,
       Subject: Subject,
-      Date: Date,
+      date: date,
       ImageFiles: ImageFiles,
       ifAdmin: ifAdmin,
+      docId: docId,
+      navi: navi,
+      postPrivacy: postPrivacy,
+      information: information,
+      admin: admin,
     });
   };
 
   return (
     <Card>
       <Text style={{fontSize: 20, fontWeight: 'bold'}}>{Title}</Text>
-      <Text>{Date}</Text>
+      <Text>{moment(date.toDate()).fromNow()}</Text>
       <Divider style={{height: 10, marginBottom: 10}} />
       <Text numberOfLines={3} style={{flexShrink: 1}}>
         {Subject}
@@ -74,22 +94,16 @@ const PostCard2 = props => {
           justifyContent: ifAdmin ? 'space-between' : 'center',
           flexDirection: 'row',
         }}>
-        <TouchableOpacity>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Icon name="perm-device-information" size={30} color="#535454" />
-            <Text> Inform Us</Text>
-          </View>
-        </TouchableOpacity>
-        {ifAdmin ? (
+        {/*  {ifAdmin ? (
           <TouchableOpacity>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Icon name="mode-edit" size={30} color="#535454" />
               <Text> Edit Recod</Text>
             </View>
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
         {ifAdmin ? (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={deleteCard}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Icon name="delete-outline" size={30} color="#535454" />
               <Text> Delete</Text>

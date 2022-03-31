@@ -1,30 +1,96 @@
-import {View, Text, StatusBar, TouchableOpacity, Button} from 'react-native';
+import {
+  View,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+  Button,
+  ScrollView,
+  Linking,
+  Alert,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AppHeader from '../../components/AppHeader';
-import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import MapView, {Callout, Marker} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
+import StationCard from '../../components/StationCard';
+import {showLocation} from 'react-native-map-link';
+import firestore from '@react-native-firebase/firestore';
+import LoadingModal from '../../components/LoadingModal';
+import Icon from 'react-native-vector-icons/dist/AntDesign';
 
 const initialState = {
   latitude: 7.9824358,
   longitude: 80.5292226,
 };
 
-const PoliceStationMap = ({navigation}) => {
+const PoliceStationMap = ({route, navigation}) => {
+  const [cardData, setCardData] = useState('');
   const [curentPosition, setCurentPosition] = useState(initialState);
+  const [loading, setLoading] = useState(true);
+  const [stationData, setStationData] = useState([]);
 
-  const getMyPosition = () => {
-    Geolocation.getCurrentPosition(
-      info => {
-        console.log(info);
-        setCurentPosition({
-          latitude: info.coords.latitude,
-          longitude: info.coords.longitude,
-        });
-      },
-      e => alert(e.message),
+  //firebase
+  const getData = async postList => {
+    var list = [];
+    var snapshot = await firestore().collection('policeStations').get();
+
+    snapshot.forEach(doc => {
+      const item = doc.data();
+      list.push({...item, docId: doc.id});
+      console.log({...item, docId: doc.id});
+    });
+
+    setStationData(list);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
+  const handleDelete = docId => {
+    Alert.alert(
+      '!Are you sure ?',
+      'Remove Police Station',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed!'),
+          style: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          onPress: () => deleteData(docId),
+        },
+      ],
+      {cancelable: false},
     );
+  };
+
+  const deleteData = docId => {
+    firestore()
+      .collection('policeStations')
+      .doc(docId)
+      .delete()
+      .then(() => {
+        getData();
+        setCardData('');
+        Alert.alert(
+          'Police Station deleted!',
+          'Police Station has been deleted successfully!',
+        );
+      })
+      .catch(e => console.log('Error deleting posst.', e));
+  };
+
+  ///firebase
+
+  const getDistance = location => {
+    showLocation({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      sourceLatitude: curentPosition.latitude,
+      sourceLongitude: curentPosition.longitude,
+    });
   };
 
   const getPermission = () => {
@@ -59,25 +125,42 @@ const PoliceStationMap = ({navigation}) => {
   };
 
   useEffect(() => {
-    return () => {
-      console.log(initialState);
-    };
-  }, [initialState.longitude]);
+    checkPermission();
+
+    navigation.addListener('focus', () => {
+      getData();
+    });
+  }, []);
 
   return (
     <View style={{flex: 1}}>
       <AppHeader
         navigation={() => {
-          navigation.navigate('HomeBottomTab');
+          route.params.admin
+            ? navigation.navigate('AdminHome')
+            : navigation.navigate('HomeBottomTab');
         }}
-        title={'PoliceStationMap'}
+        title={'Police Station Map'}
         backgroundColor={'#0a67fc'}
+        rightComponent={
+          route.params.admin ? (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('AddPoliceStation')}>
+              <Icon name="plus" size={35} color="#fff" />
+            </TouchableOpacity>
+          ) : null
+        }
       />
-      <Button
-        title="MyLocation"
-        onPress={() => checkPermission(getMyPosition())}
-      />
+      {/*  <Button title="MyLocation" onPress={() => console.log(stationData)} /> */}
       <MapView
+        showsUserLocation
+        onUserLocationChange={val => {
+          //  console.log(val.nativeEvent.coordinate);
+          setCurentPosition({
+            latitude: val.nativeEvent.coordinate.latitude,
+            longitude: val.nativeEvent.coordinate.longitude,
+          });
+        }}
         style={{height: '100%', marginBottom: 0, backgroundColor: '#fff'}}
         initialRegion={{
           latitude: 7.9824358,
@@ -85,23 +168,35 @@ const PoliceStationMap = ({navigation}) => {
           latitudeDelta: 2.5,
           longitudeDelta: 0.0421,
         }}>
-        <Marker
-          draggable
-          onDragEnd={e => {
-            setCurentPosition({
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude,
-            });
-            console.log(e.nativeEvent.coordinate);
-          }}
-          coordinate={{
-            ...curentPosition,
-          }}>
-          <Callout>
-            <Text>My Location</Text>
-          </Callout>
-        </Marker>
+        {stationData.map((item, index) => (
+          <Marker
+            key={index}
+            coordinate={item.stationLocation}
+            onPress={() => setCardData(item)}>
+            <Callout>
+              <Text>{item.name}</Text>
+            </Callout>
+          </Marker>
+        ))}
       </MapView>
+      {cardData != '' ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          style={{position: 'absolute', bottom: 60}}>
+          <StationCard
+            title={cardData.name}
+            address={cardData.address}
+            phone={cardData.phone}
+            drectionBtn={() => getDistance(cardData.stationLocation)}
+            callBtn={() => Linking.openURL(`tel:${cardData.phone}`)}
+            admin={route.params.admin}
+            deleteData={() => handleDelete(cardData.docId)}
+          />
+        </ScrollView>
+      ) : null}
+      <LoadingModal visible={loading} transparent />
     </View>
   );
 };

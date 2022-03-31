@@ -92,7 +92,7 @@ const LocationPicker = props => {
       <View style={{flex: 1, alignItems: 'center'}}>
         <Text style={styles.BottomSheeTitle}>Pick Location</Text>
         <MapView
-          focusable
+          showsUserLocation
           style={{
             height: '100%',
             width: '100%',

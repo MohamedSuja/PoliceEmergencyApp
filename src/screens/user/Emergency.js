@@ -45,6 +45,7 @@ const Emergency = ({navigation}) => {
         location: curentPosition,
         date: firestore.Timestamp.fromDate(new Date()),
         name: userData.firstName + ' ' + userData.lastName,
+        view: false,
       })
       .then(() => {
         console.log(' You are recorded!');
@@ -77,7 +78,7 @@ const Emergency = ({navigation}) => {
           longitude: info.coords.longitude,
         });
       },
-      e => alert(e.message),
+      e => console.log(e.message),
     );
   };
 

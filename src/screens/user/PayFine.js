@@ -13,10 +13,12 @@ import {Card, Divider} from 'react-native-elements';
 import AppHeader from '../../components/AppHeader';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import firestore from '@react-native-firebase/firestore';
+import LoadingModal from '../../components/LoadingModal';
 
 const PayFine = ({navigation}) => {
   const [myFine, setMyFine] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
+  const [loading, setLoading] = useState(true);
   const onRefresh = () => {
     setIsFetching(true);
     getData();
@@ -38,6 +40,7 @@ const PayFine = ({navigation}) => {
         setMyFine(querySnapshot.data().Fine);
         setTimeout(() => {
           setIsFetching(false);
+          setLoading(false);
         }, 500);
       });
   };
@@ -89,7 +92,7 @@ const PayFine = ({navigation}) => {
       </ScrollView>
 
       <TouchableOpacity
-        //onPress={() => setModalVisible(true)}
+        onPress={() => navigation.navigate('PaymentCard')}
         activeOpacity={0.7}
         style={{
           flex: 1,
@@ -114,6 +117,7 @@ const PayFine = ({navigation}) => {
           <Text style={{color: 'white', fontSize: 20}}>{total + ' Rs'}</Text>
         </View>
       </TouchableOpacity>
+      <LoadingModal visible={loading} />
     </View>
   );
 };

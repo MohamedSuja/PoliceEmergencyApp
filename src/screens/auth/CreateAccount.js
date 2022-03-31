@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 import MainButton from '../../components/MainButton';
 import {RFValue} from 'react-native-responsive-fontsize';
@@ -20,6 +21,8 @@ import {SCREEN_WIDTH} from '@gorhom/bottom-sheet';
 import Icon from 'react-native-vector-icons/dist/MaterialIcons';
 import {Picker} from '@react-native-picker/picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
+import {TestScheduler} from 'jest';
 
 const CreateAccount = ({navigation}) => {
   const {
@@ -48,8 +51,10 @@ const CreateAccount = ({navigation}) => {
   const scrollViewRef = useRef();
 
   const handleConfirm = date => {
-    setDateOfBirth(date.toString());
+    // setDateOfBirth(date.toString());
     setDatePickerVisibility(false);
+    var d = moment(new Date(date.toString().substr(0, 16)));
+    setDateOfBirth(d.format('DD-MMM-YYYY'));
   };
 
   useEffect(() => {
@@ -79,7 +84,7 @@ const CreateAccount = ({navigation}) => {
     if (email && password != '') {
       emailCheck ? setValidateEmail(false) : setValidateEmail(true);
       passwordCheck ? setValidatePassword(false) : setValidatePassword(true);
-      emailCheck == passwordCheck ? scroll(SCREEN_WIDTH - 40) : null;
+      emailCheck && passwordCheck ? scroll(SCREEN_WIDTH - 40) : null;
     } else {
       alert('Username or password field cannot be empty');
     }

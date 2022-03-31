@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/dist/Entypo';
 import {RFValue} from 'react-native-responsive-fontsize';
 
 const IconButton = props => {
-  const {} = props;
+  const {onPress} = props;
   return (
     <TouchableRipple
       style={{
@@ -16,7 +16,7 @@ const IconButton = props => {
         borderColor: '#000',
         borderWidth: 2.5,
       }}
-      onPress={() => {}}>
+      onPress={onPress}>
       <View
         style={{
           flexDirection: 'row',

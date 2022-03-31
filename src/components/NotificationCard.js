@@ -3,6 +3,7 @@ import React from 'react';
 import {Avatar} from 'react-native-elements';
 import {RFValue} from 'react-native-responsive-fontsize';
 import Icon from 'react-native-vector-icons/dist/Entypo';
+import moment from 'moment';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -40,7 +41,9 @@ const NotificationCard = props => {
           </Text>
           <View style={{flexDirection: 'row', marginTop: 5}}>
             <Icon name="back-in-time" size={20} color="#000" />
-            <Text style={{marginLeft: 5}}>{postTime}</Text>
+            <Text style={{marginLeft: 5}}>
+              {moment(postTime.toDate()).fromNow()}
+            </Text>
           </View>
         </View>
       </View>

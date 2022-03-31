@@ -6,6 +6,10 @@ import ShowComplaint from '../../screens/admin/ShowComplaint';
 import AdminEmergency from '../../screens/admin/AdminEmergency';
 import ViewComplaint from '../../screens/admin/ViewComplaint';
 import ShowUser from '../../screens/admin/ShowUser';
+import ViewAllPosts from '../../screens/admin/ViewAllPosts';
+import NewsView from '../../screens/user/NewsView';
+import AddPoliceStation from '../../screens/admin/AddPoliceStation';
+import PoliceStationMap from '../../screens/user/PoliceStationMap';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +24,10 @@ const AdminStack = () => {
       <Stack.Screen name="AdminEmergency" component={AdminEmergency} />
       <Stack.Screen name="ViewComplaint" component={ViewComplaint} />
       <Stack.Screen name="ShowUser" component={ShowUser} />
+      <Stack.Screen name="ViewAllPosts" component={ViewAllPosts} />
+      <Stack.Screen name="NewsView" component={NewsView} />
+      <Stack.Screen name="AddPoliceStation" component={AddPoliceStation} />
+      <Stack.Screen name="PoliceStationMap" component={PoliceStationMap} />
     </Stack.Navigator>
   );
 };

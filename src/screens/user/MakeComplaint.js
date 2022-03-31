@@ -64,6 +64,8 @@ const MakeComplaint = gestureHandlerRootHOC(({navigation}) => {
         complaint: complaint,
         location: curentPosition,
         selectImage: imageUrl,
+        date: firestore.Timestamp.fromDate(new Date()),
+        visible: false,
       })
       .then(() => {
         setUploading(false);

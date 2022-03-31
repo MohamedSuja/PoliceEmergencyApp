@@ -6,7 +6,9 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 const welcome = ({navigation}) => {
   useEffect(() => {
-    SystemNavigationBar.navigationHide();
+    navigation.addListener('focus', () => {
+      SystemNavigationBar.navigationHide();
+    });
   }, []);
 
   return (
