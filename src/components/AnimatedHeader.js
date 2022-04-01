@@ -2,6 +2,7 @@ import {View, Text, TouchableOpacity, Animated} from 'react-native';
 import React from 'react';
 import {Avatar, Badge} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/Ionicons';
+import {RFValue} from 'react-native-responsive-fontsize';
 
 const AnimatedHeader = props => {
   const {onPress, title, subTitle} = props;
@@ -21,7 +22,7 @@ const AnimatedHeader = props => {
             marginRight: 10,
             alignSelf: 'flex-end',
           }}>
-          <Badge
+          {/*   <Badge
             status="primary"
             value={10}
             containerStyle={{
@@ -31,7 +32,7 @@ const AnimatedHeader = props => {
               marginLeft: 10,
             }}
             badgeStyle={{backgroundColor: '#fc036f'}}
-          />
+          /> */}
 
           <Icon name="md-notifications-outline" size={30} color="#fff" />
         </Animated.View>
@@ -47,7 +48,7 @@ const AnimatedHeader = props => {
           containerStyle={{}}
           avatarStyle={{borderRadius: 15}}
           source={{
-            uri: 'https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_1280.jpg',
+            uri: 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2Fsecurity-man.png?alt=media&token=09d6333e-2b0c-4bec-a455-7a5cec874e92',
           }}
         />
         <Badge
@@ -75,7 +76,8 @@ const AnimatedHeader = props => {
           color: '#fff',
           fontSize: 20,
           marginTop: 10,
-          alignSelf: 'center',
+          // alignSelf: 'center',
+          marginLeft: RFValue(98),
           opacity: 1,
         }}>
         {subTitle}

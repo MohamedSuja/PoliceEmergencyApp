@@ -21,7 +21,7 @@ const initialState = {
   longitude: 80.5292226,
 };
 
-const AdminEmergency = ({navigation}) => {
+const AdminEmergency = ({route, navigation}) => {
   const [postData, setPostData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -175,7 +175,11 @@ const AdminEmergency = ({navigation}) => {
       <AppHeader
         title="Emergency"
         backgroundColor={'#1a5200'}
-        navigation={() => navigation.navigate('AdminHome')}
+        navigation={() =>
+          navigation.navigate(
+            route.params.admin ? 'AdminHome' : 'OfficerBottomTab',
+          )
+        }
       />
       <ScrollView
         refreshControl={
@@ -183,6 +187,7 @@ const AdminEmergency = ({navigation}) => {
         }>
         {postData.map((item, index) => (
           <EmerrgencyCard
+            admin={route.params.admin}
             key={index}
             onPressView={() => {
               updateUserType(item.docId);

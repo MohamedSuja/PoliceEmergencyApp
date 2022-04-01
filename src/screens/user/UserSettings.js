@@ -3,6 +3,9 @@ import React, {useContext} from 'react';
 import MainButton from '../../components/MainButton';
 import {AuthContext} from '../../navigations/AuthProvider';
 import {RFValue} from 'react-native-responsive-fontsize';
+import SetingsCard from '../../components/SetingsCard';
+import Feather from 'react-native-vector-icons/dist/Feather';
+import Octicons from 'react-native-vector-icons/dist/Octicons';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -14,6 +17,18 @@ const UserSettings = () => {
       <View style={styles.setingsHeader}>
         <Text style={styles.titleTextStyle}>App Setings</Text>
       </View>
+      <SetingsCard
+        title="Account"
+        icon={<Feather name="user" size={40} color="#000" />}
+      />
+      <SetingsCard
+        title="Privacy Policy"
+        icon={<Feather name="lock" size={40} color="#000" />}
+      />
+      <SetingsCard
+        title="About"
+        icon={<Octicons name="question" size={40} color="#000" />}
+      />
 
       <MainButton
         text="Sign Out"

@@ -6,6 +6,7 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 import OfficerProfile from '../screens/officer/OfficerProfile';
 import OfficerSettings from '../screens/officer/OfficerSettings';
 import OfficerHome from '../screens/officer/OfficerHome';
+import UserProfile from '../screens/user/UserProfile';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -37,7 +38,7 @@ const OfficerBottomTab = ({navigation}) => {
 
         <Tab.Screen
           name="Profile"
-          component={OfficerProfile}
+          component={UserProfile}
           listeners={{
             tabPress: () =>
               SystemNavigationBar.setNavigationColor('#7a004e', true),

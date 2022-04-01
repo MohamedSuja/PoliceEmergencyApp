@@ -25,23 +25,26 @@ const EmerrgencyCard = props => {
     discription,
     onPressDel,
     viewed,
+    admin,
   } = props;
   return (
     <ListItem.Swipeable
       bottomDivider
       leftContent={
-        <TouchableRipple
-          onPress={onPressDel}
-          style={{
-            backgroundColor: 'red',
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: 30,
-            borderRadius: 5,
-          }}>
-          <Icon name="delete" color={'#fff'} size={40} />
-        </TouchableRipple>
+        admin ? (
+          <TouchableRipple
+            onPress={onPressDel}
+            style={{
+              backgroundColor: 'red',
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: 30,
+              borderRadius: 5,
+            }}>
+            <Icon name="delete" color={'#fff'} size={40} />
+          </TouchableRipple>
+        ) : null
       }
       containerStyle={{
         padding: 0,

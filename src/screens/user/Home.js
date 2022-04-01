@@ -151,7 +151,7 @@ const Home = ({navigation}) => {
                   },
                 ],
               }}>
-              <Badge
+              {/* <Badge
                 status="primary"
                 value={10}
                 containerStyle={{
@@ -161,7 +161,7 @@ const Home = ({navigation}) => {
                   marginLeft: 10,
                 }}
                 badgeStyle={{backgroundColor: '#fc036f'}}
-              />
+              /> */}
 
               <Icon name="md-notifications-outline" size={30} color="#fff" />
             </Animated.View>
@@ -185,7 +185,7 @@ const Home = ({navigation}) => {
               containerStyle={{}}
               avatarStyle={{borderRadius: 15}}
               source={{
-                uri: 'https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_1280.jpg',
+                uri: 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2Fprofile.png?alt=media&token=3f39996d-91a9-44bd-9275-6fc421e8d9f4',
               }}
             />
             <Badge

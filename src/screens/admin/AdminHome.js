@@ -49,7 +49,7 @@ const AdminHome = ({navigation}) => {
         <MenuButton
           title="Show Emergency"
           icon={require('../../assets/icon/alarm2.png')}
-          onPress={() => navigation.navigate('AdminEmergency')}
+          onPress={() => navigation.navigate('AdminEmergency', {admin: true})}
         />
         <MenuButton
           title="View All Users"
@@ -65,6 +65,11 @@ const AdminHome = ({navigation}) => {
           title="Police Stations"
           icon={require('../../assets/icon/police-station-2.png')}
           onPress={() => navigation.navigate('PoliceStationMap', {admin: true})}
+        />
+        <MenuButton
+          title="Edit Fine List"
+          icon={require('../../assets/icon/add.png')}
+          onPress={() => navigation.navigate('FineList')}
         />
       </ScrollView>
     </View>

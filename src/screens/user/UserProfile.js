@@ -13,8 +13,9 @@ import {Divider} from 'react-native-elements';
 import ProfileMenu from '../../components/home/ProfileMenu';
 import {AuthContext} from '../../navigations/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
+import {RFValue} from 'react-native-responsive-fontsize';
 
-const UserProfile = () => {
+const UserProfile = ({navigation}) => {
   const {user} = useContext(AuthContext);
   const [userData, setUserData] = useState([]);
 
@@ -48,7 +49,10 @@ const UserProfile = () => {
         <TouchableOpacity activeOpacity={0.7}>
           <Image
             source={{
-              uri: 'https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_1280.jpg',
+              uri:
+                userData.promote == 'officer'
+                  ? 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2Fsecurity-man.png?alt=media&token=09d6333e-2b0c-4bec-a455-7a5cec874e92'
+                  : 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2Fprofile.png?alt=media&token=3f39996d-91a9-44bd-9275-6fc421e8d9f4',
             }}
             style={styles.profileImageStyle}
             resizeMode="cover"
@@ -69,10 +73,15 @@ const UserProfile = () => {
             flexDirection: 'row',
             height: 40,
             marginTop: 10,
-            marginLeft: 10,
+            marginLeft: RFValue('50'),
             alignSelf: 'baseline',
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('CharacterReports', {
+                userType: userData.promote,
+              })
+            }>
             <Text style={{color: '#fff', marginTop: 10}}>
               Character Reports 12
             </Text>
@@ -88,6 +97,7 @@ const UserProfile = () => {
             size={15}
             reviews={[]}
             starContainerStyle={{position: 'absolute', bottom: 0}}
+            isDisabled
           />
         </View>
       </View>

@@ -10,6 +10,7 @@ import ViewAllPosts from '../../screens/admin/ViewAllPosts';
 import NewsView from '../../screens/user/NewsView';
 import AddPoliceStation from '../../screens/admin/AddPoliceStation';
 import PoliceStationMap from '../../screens/user/PoliceStationMap';
+import FineList from '../../screens/admin/FineList';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ const AdminStack = () => {
       <Stack.Screen name="NewsView" component={NewsView} />
       <Stack.Screen name="AddPoliceStation" component={AddPoliceStation} />
       <Stack.Screen name="PoliceStationMap" component={PoliceStationMap} />
+      <Stack.Screen name="FineList" component={FineList} />
     </Stack.Navigator>
   );
 };

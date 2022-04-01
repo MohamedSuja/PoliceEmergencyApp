@@ -7,37 +7,38 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import MainButton from '../MainButton';
 import {RFValue} from 'react-native-responsive-fontsize';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import {Card} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/dist/AntDesign';
 import {AuthContext} from '../../navigations/AuthProvider';
+import firestore from '@react-native-firebase/firestore';
 
 const fine = [
   {
-    title: 'High Speed Driving',
-    price: 2000,
-    image:
+    fineName: 'High Speed Driving',
+    fineRs: 2000,
+    imageUrl:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPCO_k0eu1ThKSHvp2yLRejfNZq_RVK_q7IkkMyV59-dB-GuHLDG9TZJqZvauySnTYXPE&usqp=CAU',
   },
   {
-    title: 'Not Wearing Helmet',
-    price: 2500,
-    image:
+    fineName: 'Not Wearing Helmet',
+    fineRs: 2500,
+    imageUrl:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5s7BAtg2l58iBCYnT9ZnVyvTIEpbvLRW8lC7K4kOp1O1_7i0eWM9a7LH5ZQz1SLlhHEQ&usqp=CAU',
   },
   {
-    title: 'Passing lanes open!',
-    price: 1000,
-    image:
+    fineName: 'Passing lanes open!',
+    fineRs: 1000,
+    imageUrl:
       'https://qph.fs.quoracdn.net/main-qimg-808df08e3f160822c3e6c3ba717d6114.webp',
   },
   {
-    title: 'Cross double line',
-    price: 2000,
-    image:
+    fineName: 'Cross double line',
+    fineRs: 2000,
+    imageUrl:
       'https://www.driverknowledgetests.com/resources/wp-content/uploads/2014/08/double-white-line-straight-road.jpg',
   },
 ];
@@ -45,6 +46,33 @@ const fine = [
 const FineModal = props => {
   const {btnPress, modalVisible, closeBtn, chacked, listData} = props;
   const mark = data => Boolean(listData.find(item => item.title == data.title));
+
+  const [loading, setLoading] = useState(true);
+  const [fineData, setFineData] = useState([]);
+
+  ///firebase
+  const getData = async () => {
+    var list = [];
+    var snapshot = await firestore()
+      .collection('fineList')
+      .orderBy('fineName', 'asc')
+      .get();
+
+    snapshot.forEach(doc => {
+      const item = doc.data();
+      list.push({...item, docId: doc.id});
+      console.log({...item, docId: doc.id});
+    });
+
+    setFineData(list);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <Modal
@@ -85,7 +113,7 @@ const FineModal = props => {
           </TouchableOpacity>
 
           <ScrollView style={styles.scroll}>
-            {fine.map((data, index) => (
+            {fineData.map((data, index) => (
               <Card
                 key={index}
                 containerStyle={{
@@ -130,8 +158,8 @@ export default FineModal;
 
 const FineInfo = props => (
   <View style={{width: 200, justifyContent: 'space-evenly'}}>
-    <Text style={styles.titleStyle}>{props.data.title}</Text>
-    <Text style={{color: 'red'}}>{props.data.price} Rs</Text>
+    <Text style={styles.titleStyle}>{props.data.firstName}</Text>
+    <Text style={{color: 'red'}}>{props.data.fineRs} Rs</Text>
   </View>
 );
 
@@ -139,7 +167,10 @@ const FineImage = props => (
   <View>
     <Image
       source={{
-        uri: props.data.image,
+        uri:
+          props.data.imageUrl == null
+            ? 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2FScreenshot%202022-04-01%20231438.jpg?alt=media&token=974faa17-2ffa-432d-83d8-0ac6804e1994'
+            : props.data.imageUrl,
       }}
       style={{
         width: 70,

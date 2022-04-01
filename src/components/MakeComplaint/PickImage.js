@@ -3,7 +3,7 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const PickImage = props => {
-  const {item, onPress} = props;
+  const {item, removeImage} = props;
   return (
     <View
       style={{
@@ -23,7 +23,7 @@ const PickImage = props => {
         source={{uri: item}}
       />
       <TouchableOpacity
-        onPress={() => onPress}
+        onPress={removeImage}
         style={{position: 'absolute', right: 0}}>
         <Icon name={'remove-circle-outline'} size={30} color={'#2e0300'} />
       </TouchableOpacity>

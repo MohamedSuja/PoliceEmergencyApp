@@ -1,4 +1,4 @@
-import {View, Text, Modal, ScrollView, Button} from 'react-native';
+import {View, Text, Modal, ScrollView, Button, Alert} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {TextInput} from 'react-native-paper';
 import MainButton from '../../components/MainButton';
@@ -41,8 +41,27 @@ const AddFine = ({navigation}) => {
       });
   };
 
+  const handleSent = () => {
+    Alert.alert(
+      'Are you sure?',
+      'Add Penalty',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed!'),
+          style: 'cancel',
+        },
+        {
+          text: 'Confirm',
+          onPress: () => SendData(),
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   const total = addFine
-    .map(item => Number(item.price))
+    .map(item => Number(item.fineRs))
     .reduce((prev, curr) => prev + curr, 0);
 
   return (
@@ -75,8 +94,8 @@ const AddFine = ({navigation}) => {
         {addFine.map((item, index) => (
           <SlideList
             key={index}
-            text={item.title}
-            subText={item.price}
+            text={item.fineName}
+            subText={item.fineRs}
             onPress={() => {
               addFine.splice(index, 1);
               setAddFine([...addFine]);
@@ -94,7 +113,9 @@ const AddFine = ({navigation}) => {
       <View style={{margin: 10, marginBottom: 50}}>
         <MainButton
           text={'Sent Penalty ' + total + ' Rs'}
-          onPress={() => (idNo ? SendData() : alert('Please enter a valid ID'))}
+          onPress={() =>
+            idNo ? handleSent() : alert('Please enter a valid ID')
+          }
         />
       </View>
     </View>
