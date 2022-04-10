@@ -167,14 +167,14 @@ const AdminEmergency = ({route, navigation}) => {
   useEffect(() => {
     getData();
     getPermission();
-    SystemNavigationBar.setNavigationColor('#1a5200', true);
+    SystemNavigationBar.setNavigationColor('#592248', true);
   }, []);
 
   return (
     <View>
       <AppHeader
         title="Emergency"
-        backgroundColor={'#1a5200'}
+        backgroundColor={'#592248'}
         navigation={() =>
           navigation.navigate(
             route.params.admin ? 'AdminHome' : 'OfficerBottomTab',
@@ -192,10 +192,12 @@ const AdminEmergency = ({route, navigation}) => {
             onPressView={() => {
               updateUserType(item.docId);
               emergencyDistance(item.location);
+              console.log(item.location);
             }}
             onPressShare={() => {
               updateUserType(item.docId);
               emergencyLocation(item.location);
+              console.log(item.location);
             }}
             onPressDel={() => handleDelete(item.docId)}
             time={item.date}

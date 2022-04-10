@@ -12,10 +12,15 @@ import {Button, TouchableRipple} from 'react-native-paper';
 import moment from 'moment';
 import {ListItem} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/dist/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/dist/Entypo';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const EmerrgencyCard = props => {
+  const test = () => {
+    console.log('test');
+  };
+
   const {
     onPressView,
     onPressShare,
@@ -29,8 +34,43 @@ const EmerrgencyCard = props => {
   } = props;
   return (
     <ListItem.Swipeable
+      disabled
       bottomDivider
       leftContent={
+        <View style={{flexDirection: 'row', width: 190, height: '100%'}}>
+          <TouchableRipple
+            onPress={onPressView}
+            style={{
+              backgroundColor: '#00450e',
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: 5,
+              borderRadius: 5,
+            }}>
+            <View style={{alignItems: 'center'}}>
+              <Entypo name="location" color={'#fff'} size={40} />
+              <Text style={{fontWeight: '800', color: '#fff'}}>Distance</Text>
+            </View>
+          </TouchableRipple>
+          <TouchableRipple
+            onPress={onPressShare}
+            style={{
+              backgroundColor: '#44017a',
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: 5,
+              borderRadius: 5,
+            }}>
+            <View style={{alignItems: 'center'}}>
+              <Entypo name="location-pin" color={'#fff'} size={40} />
+              <Text style={{fontWeight: '600', color: '#fff'}}>Share</Text>
+            </View>
+          </TouchableRipple>
+        </View>
+      }
+      rightContent={
         admin ? (
           <TouchableRipple
             onPress={onPressDel}
@@ -39,38 +79,45 @@ const EmerrgencyCard = props => {
               flex: 1,
               alignItems: 'center',
               justifyContent: 'center',
-              margin: 30,
+              margin: 5,
               borderRadius: 5,
+              marginLeft: 70,
             }}>
-            <Icon name="delete" color={'#fff'} size={40} />
+            <View style={{alignItems: 'center'}}>
+              <Icon name="delete" color={'#fff'} size={40} />
+              <Text style={{fontWeight: '800', color: '#fff'}}>Distance</Text>
+            </View>
           </TouchableRipple>
         ) : null
       }
+      rightWidth={200}
+      rightStyle={{zIndex: 999}}
       containerStyle={{
         padding: 0,
         justifyContent: 'center',
       }}>
-      <LinearGradient
-        colors={
-          viewed ? ['#8EC5FC', '#E0C3FC'] : ['#DD5E89', '#F7BB97', '#DD5E89']
-        }
-        start={{x: 0, y: 1}}
-        end={{x: 1, y: 1}}
-        style={styles.linearGradient}>
-        <Text style={{alignSelf: 'baseline', color: '#000', marginLeft: 5}}>
-          {moment(time.toDate()).fromNow()}
-        </Text>
-        <Text style={{fontWeight: 'bold', fontSize: 18, color: 'red'}}>
-          {emergency}
-        </Text>
-        <TouchableOpacity>
-          <Text style={{fontWeight: '900'}}>Request For : {request}</Text>
-        </TouchableOpacity>
-        {discription ? (
-          <Text style={{color: '#000'}}>{discription}</Text>
-        ) : null}
+      <ListItem.Content>
+        <LinearGradient
+          colors={
+            viewed ? ['#8EC5FC', '#E0C3FC'] : ['#DD5E89', '#F7BB97', '#DD5E89']
+          }
+          start={{x: 0, y: 1}}
+          end={{x: 1, y: 1}}
+          style={styles.linearGradient}>
+          <Text style={{alignSelf: 'baseline', color: '#000', marginLeft: 5}}>
+            {moment(time.toDate()).fromNow()}
+          </Text>
+          <Text style={{fontWeight: 'bold', fontSize: 18, color: 'red'}}>
+            {emergency}
+          </Text>
+          <TouchableOpacity onPress={() => console.log('dsfhj')}>
+            <Text style={{fontWeight: '900'}}>Request For : {request}</Text>
+          </TouchableOpacity>
+          {discription ? (
+            <Text style={{color: '#000'}}>{discription}</Text>
+          ) : null}
 
-        <View style={{flexDirection: 'row'}}>
+          {/* <View style={{flexDirection: 'row'}}>
           <Button
             mode="contained"
             onPress={onPressView}
@@ -83,10 +130,11 @@ const EmerrgencyCard = props => {
             style={{backgroundColor: 'rgba()', margin: 5}}>
             <Text style={{color: '#000'}}>Share Location</Text>
           </Button>
-        </View>
-      </LinearGradient>
+        </View> */}
+        </LinearGradient>
+      </ListItem.Content>
 
-      {/*  <ListItem.Chevron /> */}
+      {/*    <ListItem.Chevron /> */}
     </ListItem.Swipeable>
   );
 };

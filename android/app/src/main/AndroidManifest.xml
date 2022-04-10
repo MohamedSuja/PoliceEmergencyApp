@@ -17,16 +17,27 @@
        <meta-data
          android:name="com.google.android.geo.API_KEY"
          android:value="AIzaSyBSCby_XF_Qx3RpG3gv1xP1kkAs808G4Co"/>
+
+        <activity
+            android:name=".SplashActivity"
+            android:label="@string/app_name"
+            android:theme="@style/SplashTheme"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
         android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustResize">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        android:windowSoftInputMode="adjustResize"
+          android:exported="true">
+
       </activity>
     </application>
 </manifest>

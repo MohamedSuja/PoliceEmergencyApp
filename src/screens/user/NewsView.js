@@ -58,7 +58,10 @@ const NewsView = ({route, navigation}) => {
         ],
       })
       .then(() => {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+
         admin
           ? navigation.navigate('ViewAllPosts')
           : alert('Your data recorded');
