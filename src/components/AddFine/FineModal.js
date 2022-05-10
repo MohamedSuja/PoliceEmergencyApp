@@ -158,7 +158,7 @@ export default FineModal;
 
 const FineInfo = props => (
   <View style={{width: 200, justifyContent: 'space-evenly'}}>
-    <Text style={styles.titleStyle}>{props.data.firstName}</Text>
+    <Text style={styles.titleStyle}>{props.data.fineName}</Text>
     <Text style={{color: 'red'}}>{props.data.fineRs} Rs</Text>
   </View>
 );

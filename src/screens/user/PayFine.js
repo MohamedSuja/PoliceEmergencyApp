@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,11 +14,14 @@ import AppHeader from '../../components/AppHeader';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import firestore from '@react-native-firebase/firestore';
 import LoadingModal from '../../components/LoadingModal';
+import {AuthContext} from '../../navigations/AuthProvider';
 
 const PayFine = ({navigation}) => {
   const [myFine, setMyFine] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [loading, setLoading] = useState(true);
+  const {userData} = useContext(AuthContext);
+
   const onRefresh = () => {
     setIsFetching(true);
     getData();
@@ -27,27 +30,32 @@ const PayFine = ({navigation}) => {
   const r = () => <ActivityIndicator size={'large'} style={{marginTop: 200}} />;
 
   const total = myFine
-    .map(item => Number(item.price))
+    .map(item => Number(item.fineRs))
     .reduce((prev, curr) => prev + curr, 0);
 
   const getData = () => {
     firestore()
       .collection('fine')
-      .doc('1')
+      .doc(userData.idNo)
       .get()
       .then(querySnapshot => {
-        // console.log(querySnapshot.data());
+        console.log(querySnapshot.data());
         setMyFine(querySnapshot.data().Fine);
         setTimeout(() => {
           setIsFetching(false);
           setLoading(false);
         }, 500);
+      })
+      .catch(e => {
+        console.log(e);
+        setLoading(false);
+        alert('! You have no penalties');
       });
   };
 
   useEffect(() => {
     let unmounted = false;
-    console.log('Running effect to fetch data');
+    //  console.log(userData);
 
     setTimeout(() => {
       console.log('Data loaded for page');
@@ -126,9 +134,9 @@ export default PayFine;
 
 const FineInfo = props => (
   <View style={{width: 200, justifyContent: 'space-evenly'}}>
-    <Text style={styles.titleStyle}>{props.data.title}</Text>
+    <Text style={styles.titleStyle}>{props.data.fineName}</Text>
     <Text>{props.data.description}</Text>
-    <Text>{props.data.price}</Text>
+    <Text>{props.data.fineRs}</Text>
   </View>
 );
 
@@ -136,7 +144,10 @@ const FineImage = props => (
   <View>
     <Image
       source={{
-        uri: props.data.image,
+        uri:
+          props.data.imageUrl == null
+            ? 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2FScreenshot%202022-04-01%20231438.jpg?alt=media&token=974faa17-2ffa-432d-83d8-0ac6804e1994'
+            : props.data.imageUrl,
       }}
       style={{
         width: 100,

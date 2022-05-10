@@ -14,10 +14,33 @@ import ProfileMenu from '../../components/home/ProfileMenu';
 import {AuthContext} from '../../navigations/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
 import {RFValue} from 'react-native-responsive-fontsize';
+import LoadingModal from '../../components/LoadingModal';
 
 const UserProfile = ({navigation}) => {
   const {user} = useContext(AuthContext);
   const [userData, setUserData] = useState([]);
+  const [ratingData, setRatingData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  ///fire base
+  const getData = async idNo => {
+    var list = [];
+    var snapshot = await firestore()
+      .collection('userRating')
+      .where('idNo', '==', idNo)
+      .get();
+
+    snapshot.forEach(doc => {
+      const item = doc.data();
+      list.push({...item, docId: doc.id});
+      console.log({...item, docId: doc.id});
+    });
+
+    setRatingData(list);
+    setLoading(false);
+  };
+
+  //endfirbase
 
   useEffect(() => {
     firestore()
@@ -26,13 +49,20 @@ const UserProfile = ({navigation}) => {
       .get()
       .then(querySnapshot => {
         setUserData(querySnapshot.data());
+        getData(querySnapshot.data().idNo);
       });
     SystemNavigationBar.setNavigationColor('#7a004e', true);
 
-    return () => {
+    /*   return () => {
       SystemNavigationBar.setNavigationColor('#7a004e', true);
-    };
+    }; */
   }, []);
+
+  const totalRating = ratingData
+    .map(item => Number(item.rating))
+    .reduce((prev, curr) => prev + curr, 0);
+
+  const avrageRating = totalRating / ratingData.length;
 
   return (
     <View style={{flex: 1}}>
@@ -80,10 +110,11 @@ const UserProfile = ({navigation}) => {
             onPress={() =>
               navigation.navigate('CharacterReports', {
                 userType: userData.promote,
+                ratingData: ratingData,
               })
             }>
             <Text style={{color: '#fff', marginTop: 10}}>
-              Character Reports 12
+              Character Reports {ratingData.length}
             </Text>
           </TouchableOpacity>
 
@@ -92,12 +123,13 @@ const UserProfile = ({navigation}) => {
             orientation="vertical"
             style={{marginLeft: 20, marginRight: 20}}
           />
-          <Text style={{color: '#fff'}}>4.8 / 5</Text>
+          <Text style={{color: '#fff'}}>{avrageRating.toPrecision(2)} / 5</Text>
           <AirbnbRating
             size={15}
             reviews={[]}
             starContainerStyle={{position: 'absolute', bottom: 0}}
             isDisabled
+            defaultRating={avrageRating.toPrecision(1)}
           />
         </View>
       </View>
@@ -116,6 +148,7 @@ const UserProfile = ({navigation}) => {
           text={userData.dateOfBirth}
         />
       </ScrollView>
+      <LoadingModal visible={loading} />
     </View>
   );
 };

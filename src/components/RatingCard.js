@@ -1,9 +1,10 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 import {AirbnbRating, Avatar, Divider} from 'react-native-elements';
+import moment from 'moment';
 
 const RatingCard = props => {
-  const {report} = props;
+  const {report, rating, name, date} = props;
   return (
     <View style={{marginTop: 10}}>
       <View style={{flexDirection: 'row'}}>
@@ -17,9 +18,9 @@ const RatingCard = props => {
         />
         <View style={{marginTop: 8}}>
           <Text style={{color: '#000', fontSize: 14, fontWeight: '700'}}>
-            Name
+            {name}
           </Text>
-          <Text>Date</Text>
+          <Text>{moment(date.toDate()).format('LLL')}</Text>
         </View>
         <View style={{position: 'absolute', right: 15}}>
           <AirbnbRating
@@ -27,12 +28,13 @@ const RatingCard = props => {
             reviewSize={0}
             selectedColor="#942700"
             isDisabled
+            defaultRating={rating}
           />
         </View>
       </View>
       {report ? (
         <View style={{backgroundColor: '#fff', margin: 8, padding: 8}}>
-          <Text>Contant</Text>
+          <Text>{report}</Text>
         </View>
       ) : null}
 

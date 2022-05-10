@@ -7,12 +7,14 @@ import AppHeader from '../../components/AppHeader';
 import FineModal from '../../components/AddFine/FineModal';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/dist/Fontisto';
+import {Avatar} from 'react-native-elements';
 
 const AddFine = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [addFine, setAddFine] = useState([]);
   const [idNo, setIdNo] = useState();
+  const [publicData, setPublicData] = useState([]);
   const chacked = (data, checkboxValue) => {
     checkboxValue
       ? setAddFine([...addFine, data])
@@ -39,6 +41,23 @@ const AddFine = ({navigation}) => {
         // console.log(querySnapshot.data());
         setAddFine(querySnapshot.data().Fine);
       });
+  };
+
+  const getPublicData = async () => {
+    var list = [];
+    var snapshot = await firestore()
+      .collection('user')
+      .where('idNo', '==', idNo)
+      .get();
+
+    snapshot.forEach(doc => {
+      const item = doc.data();
+      list.push({...item, docId: doc.id});
+      console.log({...item, docId: doc.id});
+    });
+
+    setPublicData(list);
+    getData();
   };
 
   const handleSent = () => {
@@ -81,12 +100,29 @@ const AddFine = ({navigation}) => {
           <TextInput.Icon
             name={() => <Icon name="search" size={25} />}
             onPress={() =>
-              idNo ? getData() : alert('Please enter a valid ID')
+              idNo ? getPublicData() : alert('Please enter a valid ID')
             }
           />
         }
       />
-
+      {publicData[0] ? (
+        <View style={{flexDirection: 'row'}}>
+          <Avatar
+            size={64}
+            containerStyle={{marginLeft: 10, marginRight: 15}}
+            avatarStyle={{borderRadius: 15}}
+            source={{
+              uri: 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2Fprofile.png?alt=media&token=3f39996d-91a9-44bd-9275-6fc421e8d9f4',
+            }}
+          />
+          <View style={{marginTop: 8}}>
+            <Text style={{color: '#000', fontSize: 14, fontWeight: '700'}}>
+              {publicData[0].firstName + ' ' + publicData[0].lastName}
+            </Text>
+            <Text>{publicData[0].address}</Text>
+          </View>
+        </View>
+      ) : null}
       <View style={{margin: 10}}>
         <MainButton text="Add Fine" onPress={() => setModalVisible(true)} />
       </View>

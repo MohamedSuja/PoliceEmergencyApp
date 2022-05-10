@@ -72,7 +72,12 @@ const OfficerHome = ({navigation}) => {
         <MenuButton
           title="Add Public Report"
           icon={require('../../assets/icon/files-and-folders.png')}
-          onPress={() => navigation.navigate('AddUserReport', {admin: true})}
+          onPress={() =>
+            navigation.navigate('AddUserReport', {
+              admin: true,
+              userData: userData,
+            })
+          }
         />
         <MenuButton
           title="Show Emergency"
