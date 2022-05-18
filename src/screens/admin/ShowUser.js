@@ -11,6 +11,7 @@ const ShowUser = ({navigation}) => {
   const [userData, setUserData] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
+
   const [showDialog, setShowDialog] = useState({
     visible: false,
     title: '',
@@ -72,7 +73,11 @@ const ShowUser = ({navigation}) => {
       {userData.map((item, index) => (
         <UserCard
           key={index}
-          onPress={() => {
+          promote={item.promote}
+          onPress={() =>
+            navigation.navigate('UserDetailsVerify', {itemData: item})
+          }
+          onLongPress={() => {
             setShowDialog({
               visible: true,
               title: item.firstName + ' ' + item.lastName,

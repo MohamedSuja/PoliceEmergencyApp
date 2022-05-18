@@ -11,6 +11,7 @@ import UserNotification from '../../screens/user/UserNotification';
 import PoliceStationMap from '../../screens/user/PoliceStationMap';
 import PaymentCard from '../../screens/user/PaymentCard';
 import CharacterReports from '../../screens/CharacterReports';
+import VerifyAccount from '../../screens/user/VerifyAccount';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ const AppStack = () => {
       <Stack.Screen name="PoliceStationMap" component={PoliceStationMap} />
       <Stack.Screen name="PaymentCard" component={PaymentCard} />
       <Stack.Screen name="CharacterReports" component={CharacterReports} />
+      <Stack.Screen name="VerifyAccount" component={VerifyAccount} />
     </Stack.Navigator>
   );
 };

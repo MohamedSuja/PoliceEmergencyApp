@@ -11,6 +11,8 @@ import NewsView from '../../screens/user/NewsView';
 import AddPoliceStation from '../../screens/admin/AddPoliceStation';
 import PoliceStationMap from '../../screens/user/PoliceStationMap';
 import FineList from '../../screens/admin/FineList';
+import UserDetailsVerify from '../../screens/admin/UserDetailsVerify';
+import Idview from '../../screens/admin/Idview';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,8 @@ const AdminStack = () => {
       <Stack.Screen name="AddPoliceStation" component={AddPoliceStation} />
       <Stack.Screen name="PoliceStationMap" component={PoliceStationMap} />
       <Stack.Screen name="FineList" component={FineList} />
+      <Stack.Screen name="UserDetailsVerify" component={UserDetailsVerify} />
+      <Stack.Screen name="Idview" component={Idview} />
     </Stack.Navigator>
   );
 };

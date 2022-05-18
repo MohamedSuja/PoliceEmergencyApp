@@ -5,9 +5,9 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {TouchableRipple} from 'react-native-paper';
 
 const UserCard = props => {
-  const {onPress, name, id, userType} = props;
+  const {onPress, onLongPress, name, id, userType, promote} = props;
   return (
-    <TouchableRipple onPress={onPress}>
+    <TouchableRipple onLongPress={onLongPress} onPress={onPress}>
       <Card
         containerStyle={{
           margin: RFValue('5'),
@@ -20,7 +20,10 @@ const UserCard = props => {
           containerStyle={{}}
           avatarStyle={{borderRadius: 15}}
           source={{
-            uri: 'https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_1280.jpg',
+            uri:
+              promote == 'officer'
+                ? 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2Fsecurity-man.png?alt=media&token=09d6333e-2b0c-4bec-a455-7a5cec874e92'
+                : 'https://firebasestorage.googleapis.com/v0/b/policeapp-32650.appspot.com/o/assets%2Fprofile.png?alt=media&token=3f39996d-91a9-44bd-9275-6fc421e8d9f4',
           }}
         />
         <View style={{marginLeft: RFValue('10')}}>

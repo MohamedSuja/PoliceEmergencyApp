@@ -15,10 +15,12 @@ import {AuthContext} from '../../navigations/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
 import {RFValue} from 'react-native-responsive-fontsize';
 import LoadingModal from '../../components/LoadingModal';
+import {TouchableRipple} from 'react-native-paper';
 
 const UserProfile = ({navigation}) => {
   const {user} = useContext(AuthContext);
   const [userData, setUserData] = useState([]);
+  const [userVerefyData, setUserVerfiyData] = useState();
   const [ratingData, setRatingData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,9 +37,19 @@ const UserProfile = ({navigation}) => {
       list.push({...item, docId: doc.id});
       console.log({...item, docId: doc.id});
     });
-
+    getVerifyData();
     setRatingData(list);
     setLoading(false);
+  };
+  const getVerifyData = async () => {
+    await firestore()
+      .collection('verify')
+      .doc(user.uid)
+      .get()
+      .then(querySnapshot => {
+        console.log(querySnapshot.data());
+        setUserVerfiyData(querySnapshot.data());
+      });
   };
 
   //endfirbase
@@ -66,6 +78,36 @@ const UserProfile = ({navigation}) => {
 
   return (
     <View style={{flex: 1}}>
+      {userVerefyData ? (
+        userVerefyData.verify ? (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              position: 'absolute',
+              top: 30,
+              right: 10,
+              zIndex: 999,
+            }}>
+            <Image
+              source={require('../../assets/icon/verify.png')}
+              style={{height: 50, width: 50}}
+            />
+            <Text style={{color: 'white', fontWeight: 'bold', marginLeft: 7}}>
+              Verified
+            </Text>
+          </View>
+        ) : (
+          <TouchableRipple
+            onPress={() => navigation.navigate('VerifyAccount')}
+            style={{position: 'absolute', top: 30, right: 10, zIndex: 999}}>
+            <Text style={{color: '#fff', fontWeight: '800'}}>
+              Verify User ID
+            </Text>
+          </TouchableRipple>
+        )
+      ) : null}
+
       <View style={styles.headerStyle}>
         <Text
           style={{
